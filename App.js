@@ -5,17 +5,20 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
 class OrderScreen extends React.Component {
+  state = {
+    orderNo: 0
+  }
+  //assign orderNo the value coming from cart page
   ordrPlaced = function () {
     alert('Order Placed');
-    this.setState({ styles: { opacity: 0 } });
-
+    //send order no to admin side;
   }
   render() {
     return (
       <View style={styles.container}>
         <Text style={styles.OrderNumber}>Order Number:</Text>
         <ImageBackground source={require('./assets/Rectangle10.png')} style={styles.NumbDisplay}>
-          <Text style={styles.CodeStyle} >296</Text>
+          <Text style={styles.CodeStyle} >{this.state.orderNo}</Text>
         </ImageBackground>
         <TouchableOpacity style={styles.Button1Style}
           onPress={() => { this.ordrPlaced() }}>
