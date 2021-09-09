@@ -1,118 +1,41 @@
-import React from 'react';
-import { StyleSheet, Image, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
-import { set } from 'react-native-reanimated';
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
+import React, { useState, useEffect } from 'react';
+import { Text, View, StyleSheet, Button } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 
-class OrderScreen extends React.Component {
-  ordrPlaced = function () {
-    alert('Order Placed');
-    this.setState({ styles: { opacity: 0 } });
+import LoginScreen from './Components/Auth/Login';
 
-  }
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.OrderNumber}>Order Number:</Text>
-        <ImageBackground source={require('./assets/Rectangle10.png')} style={styles.NumbDisplay}>
-          <Text style={styles.CodeStyle} >296</Text>
-        </ImageBackground>
-        <TouchableOpacity style={styles.Button1Style}
-          onPress={() => { this.ordrPlaced() }}>
-          <Image source={require('./assets/OdrBtn.png')} style={{ resizeMode: 'cover', width: '100%', height: '100%' }} />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.Button2Style}
-          onPress={() => this.props.navigation.navigate('MiniCart')}  >
-          <Image source={require('./assets/ReceivedBtn.png')} style={{ resizeMode: 'cover', width: '100%', height: '100%' }} />
-        </TouchableOpacity>
-      </View>
-    );
-  }
+const Stack = createStackNavigator();
+export default function App() {
+
+  return(
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName='Login'>
+      <Stack.Screen name='Login' component={LoginScreen} options={{headerShown: false}}/>
+      </Stack.Navigator>
+    </NavigationContainer>
+  )
+
 }
-class ThankYouScreen extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Text>Thank You</Text>
-      </View>
-    );
-  }
-}
-const AppNavigator = createStackNavigator(
-  {
-    Home: OrderScreen,
-    MiniCart: ThankYouScreen
-  },
-  {
-    initialRouteName: "Home"
-  }
-);
-const AppContainer = createAppContainer(AppNavigator);
-export default class App extends React.Component {
-  render() {
-    return <AppContainer />;
-  }
-}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  OrderNumber: {
-    position: "absolute",
-    width: 151,
-    height: 25,
-    left: 45,
-    top: 60,
-    fontStyle: "normal",
-    fontWeight: "normal",
-    fontSize: 20,
-    lineHeight: 25
+  maintext: {
+    fontSize: 16,
+    margin: 20,
   },
-  NumbDisplay: {
-    position: "absolute",
-    width: 267,
-    height: 238,
-    left: 45,
-    top: 100,
-    backgroundColor: "#FFFFFF",
-    borderWidth: 1,
-    borderColor: "#000000",
-    borderStyle: "solid",
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    borderBottomRightRadius: 25,
-    borderBottomLeftRadius: 25,
+  barcodebox: {
     alignItems: 'center',
-    justifyContent: 'center'
-  },
-  Button1Style: {
-    position: "absolute",
-    width: 177.65,
-    height: 64.9,
-    left: 95,
-    top: 370,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  Button2Style: {
-    position: "absolute",
-    width: 177.65,
-    height: 64.9,
-    left: 95,
-    top: 450,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  CodeStyle: {
-    position: "absolute",
-    width: 214,
-    height: 125,
-    fontStyle: "normal",
-    fontWeight: "normal",
-    fontSize: 100,
-    lineHeight: 125
+    justifyContent: 'center',
+    height: 300,
+    width: 300,
+    overflow: 'hidden',
+    borderRadius: 30,
+    backgroundColor: 'tomato'
   }
 });
