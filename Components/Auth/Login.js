@@ -13,15 +13,15 @@ export default function Login({ navigation }) {
         colors={['#D49CFF', '#8F00FF', '#0038FF', '#102265']}
         style={styles.background}
       />
-      <TouchableOpacity style={styles.Arrow} onPress={() => navigation.navigate("")} >
-        <Image source={arrow} style={styles.ArrowHead} />
-      </TouchableOpacity>
+
       <Image source={logo} style={{ width: 208, height: 208, left: 103, top: 59, position: 'absolute' }} />
       <View style={styles.RectangleShapeView} />
-      <Text style={styles.RegText}>Login</Text>
+      <Text style={styles.LoginText}>Login</Text>
       <Text style={styles.CreateNewAccTxt}>Enter your Username and Password</Text>
       <TextInput style={styles.InputStyle1} placeholder='Enter Username'></TextInput>
       <TextInput style={styles.InputStyle2} placeholder='Enter Password' secureTextEntry={true}></TextInput>
+      <Text style={styles.regText} onPress={() => navigation.navigate("RegisterMobile")}>Create One</Text>
+      <Text style={styles.regNowText}>Don't have an account?</Text>
       <TouchableOpacity style={styles.Button} title='Login' onPress={() => navigation.navigate("Order Screen")}>
         <Text style={styles.ButtonText}>Login</Text></TouchableOpacity>
     </View>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 15
   },
 
-  RegText:
+  LoginText:
   {
     position: "absolute",
     width: 77,
@@ -91,6 +91,21 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     color: "#FFC700"
   },
+
+  regText:
+    {
+        position: "absolute",
+        width: 53,
+        height: 9,
+        left: 267,
+        top: 489,
+        fontFamily: "Roboto",
+        fontStyle: "normal",
+        fontWeight: 500,
+        fontSize: 10,
+        lineHeight: 12,
+        color: "#FFC700"
+    },
 
   CreateNewAccTxt:
   {
@@ -106,6 +121,21 @@ const styles = StyleSheet.create({
     lineHeight: 14,
     color: "rgba(231, 231, 231, 0.81)"
   },
+
+  regNowText:
+    {
+        position: "absolute",
+        width: 104,
+        height: 11,
+        left: 95,
+        top: 489,
+        fontFamily: "Roboto",
+        fontStyle: "normal",
+        fontWeight: "500",
+        fontSize: 10,
+        lineHeight: 12,
+        color: "rgba(231, 231, 231, 0.81)"
+      },
 
   InputStyle1:
   {

@@ -11,15 +11,15 @@ export default function Order({ navigation }) {
     return (
         <View style={styles.container}>
             <Text style={styles.OrderNumber}>Order Number:</Text>
-            <ImageBackground source={require('../assets/Rectangle10.png')} style={styles.NumbDisplay}>
+            <ImageBackground source={require('./../assets/Rectangle10.png')} style={styles.NumbDisplay}>
                 <Text style={styles.CodeStyle} >{state.orderNo}</Text>
             </ImageBackground>
             <TouchableOpacity style={styles.Button1Style}
                 onPress={() => { ordrPlaced() }}>
-                <Image source={require('../assets/OdrBtn.png')} style={{ resizeMode: 'cover', width: '100%', height: '100%' }} />
+                <Image source={require('./../assets/OdrBtn.png')} style={{ resizeMode: 'cover', width: '100%', height: '100%' }} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.Button2Style} >
-                <Image source={require('../assets/ReceivedBtn.png')} style={{ resizeMode: 'cover', width: '100%', height: '100%' }} />
+                <Image source={require('./../assets/ReceivedBtn.png')} style={{ resizeMode: 'cover', width: '100%', height: '100%' }} />
             </TouchableOpacity>
         </View>
     );
