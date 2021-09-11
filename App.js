@@ -5,15 +5,17 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 import OrderScreen from './Components/orderScreen';
 import LoginScreen from './Components/Auth/Login';
+import QRScreen from './Components/QRScreen';
 
 const Stack = createStackNavigator();
 export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='Login'>
+      <Stack.Navigator initialRouteName='QR Screen'>
         <Stack.Screen name='Login' component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name='Order Screen' component={OrderScreen} options={{ headerShown: false }} />
+        <Stack.Screen name='QR Screen' component={QRScreen} options={{ headerShown: false }} />
       </Stack.Navigator>
     </NavigationContainer>
   )
