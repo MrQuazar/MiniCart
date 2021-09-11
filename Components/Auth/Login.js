@@ -3,7 +3,6 @@ import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'reac
 import { LinearGradient } from 'expo-linear-gradient'
 
 import logo from '../../assets/TheIcon.png'
-import arrow from '../../assets/Arrow.png'
 
 export default function Login({ navigation }) {
   return (
@@ -101,9 +100,9 @@ const styles = StyleSheet.create({
         top: 489,
         fontFamily: "Roboto",
         fontStyle: "normal",
-        fontWeight: 500,
+        fontWeight: "500",
         fontSize: 10,
-        lineHeight: 12,
+        lineHeight: 11,
         color: "#FFC700"
     },
 
@@ -125,7 +124,7 @@ const styles = StyleSheet.create({
   regNowText:
     {
         position: "absolute",
-        width: 104,
+        width: 114,
         height: 11,
         left: 95,
         top: 489,

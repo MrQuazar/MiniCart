@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
+import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import RegisterMobileScreen from './components/auth/RegisterMobile';
-import EnterOTPScreen from './components/auth/EnterOTP';
-import FinishRegistrationScreen from './components/auth/FinishRegistration';
+import RegisterMobileScreen from './Components/Auth/RegisterMobile';
+import EnterOTPScreen from './Components/Auth/EnterOTP';
+import FinishRegistrationScreen from './Components/Auth/FinishRegistration';
 
 import OrderScreen from './Components/orderScreen';
 import LoginScreen from './Components/Auth/Login';
+import ThankyouPageScreen from './Components/ThankyouPage';
 
 const Stack = createStackNavigator();
 export default function App() {
@@ -21,6 +21,7 @@ export default function App() {
         <Stack.Screen name='RegisterMobile' component={RegisterMobileScreen} options={{headerShown: false}}/>
         <Stack.Screen name='EnterOTP' component={EnterOTPScreen} options={{headerShown: false}}/>
         <Stack.Screen name='FinishRegistration' component={FinishRegistrationScreen} options={{headerShown: false}}/>
+        <Stack.Screen name='ThankyouPage' component={ThankyouPageScreen} options={{headerShown: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   )

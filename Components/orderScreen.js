@@ -18,7 +18,8 @@ export default function Order({ navigation }) {
                 onPress={() => { ordrPlaced() }}>
                 <Image source={require('./../assets/OdrBtn.png')} style={{ resizeMode: 'cover', width: '100%', height: '100%' }} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.Button2Style} >
+            <TouchableOpacity style={styles.Button2Style}
+                onPress={() => {navigation.navigate("ThankyouPage")}} >
                 <Image source={require('./../assets/ReceivedBtn.png')} style={{ resizeMode: 'cover', width: '100%', height: '100%' }} />
             </TouchableOpacity>
         </View>

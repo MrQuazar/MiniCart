@@ -21,7 +21,8 @@ export default function RegisterMobile({ navigation }){
             <Text style={styles.RegText}>Register</Text>
             <Text style={styles.CreateNewAccTxt}>Create a New Account</Text>
             <TextInput style={styles.InputStyle} placeholder='Mobile Number' keyboardType='numeric'></TextInput>
-            <TouchableOpacity  style={styles.HaveAccTxt}>
+            <TouchableOpacity  style={styles.HaveAccTxt}
+            onPress={() => navigation.navigate("Login")}>
             <Text style={{fontFamily: "Roboto",fontStyle: "normal",fontWeight: "500",fontSize: 10,lineHeight: 12,color: "rgba(231, 231, 231, 0.81)"}}>
               Have an account already?</Text>
             </TouchableOpacity>
