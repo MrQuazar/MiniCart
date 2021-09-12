@@ -3,7 +3,6 @@ import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'reac
 import { LinearGradient } from 'expo-linear-gradient'
 
 import logo from '../../assets/TheIcon.png'
-import arrow from '../../assets/Arrow.png'
 
 export default function Login({ navigation }) {
   return (
@@ -101,7 +100,7 @@ const styles = StyleSheet.create({
         top: 489,
         fontFamily: "Roboto",
         fontStyle: "normal",
-        fontWeight: 500,
+        fontWeight: "500",
         fontSize: 10,
         lineHeight: 12,
         color: "#FFC700"
