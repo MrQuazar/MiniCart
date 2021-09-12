@@ -3,9 +3,9 @@ import { Text, View, StyleSheet, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import RegisterMobileScreen from './components/auth/RegisterMobile';
-import EnterOTPScreen from './components/auth/EnterOTP';
-import FinishRegistrationScreen from './components/auth/FinishRegistration';
+import RegisterMobileScreen from './Components/Auth/RegisterMobile';
+import EnterOTPScreen from './Components/Auth/EnterOTP';
+import FinishRegistrationScreen from './Components/Auth/FinishRegistration';
 
 const Stack = createStackNavigator();
 export default function App() {

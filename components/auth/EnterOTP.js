@@ -1,13 +1,17 @@
 import React from 'react'
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
+import { Dimensions } from 'react-native';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('screen').height;
 
 import logo from '../../assets/TheIcon.png'
 import arrow from '../../assets/Arrow.png'
 
 export default function EnterOTP({ navigation }){
     return(
-        <View style={{flex:1, backgroundcolor:'#e5e5e5', justifyContent: 'center'}}>
+        <View style={styles.container}>
             <LinearGradient
             start={{x: 1, y: 0}} end={{x: 0, y: 1}}
             colors={['#D49CFF', '#8F00FF' , '#0038FF' , '#102265' ]}
@@ -16,7 +20,9 @@ export default function EnterOTP({ navigation }){
             <TouchableOpacity style={styles.Arrow} onPress={() => navigation.navigate("RegisterMobile")} >
             <Image source={arrow} style={styles.ArrowHead}/>
             </TouchableOpacity>           
-            <Image source={logo} style={{width:208,height:208,left:103,top:59,position:'absolute'}}/>
+            <View style={styles.logo}>
+            <Image source={logo} style={styles.logoimg}/>
+            </View>
             <View style={styles.RectangleShapeView} />
             <Text style={styles.RegText}>Register</Text>
             <Text style={styles.CreateNewAccTxt}>We’ve sent an OTP on your Mobile Number</Text>
@@ -39,36 +45,51 @@ export default function EnterOTP({ navigation }){
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
+      position: "relative",
+      width: windowWidth,
+      height: windowHeight,    
     },
 
     Arrow:
     {
       position: "absolute",
-      width: 29,
-      height: 21,
-      left: 10,
-      top: 38
+      width: 29/414 * windowWidth,
+      height: 21/896 * windowHeight,
+      left: 10/414 * windowWidth,
+      top: 60/896 * windowHeight
     },
 
     ArrowHead:
     {
-      position: "absolute",
-      width: 29,
-      height: 21,
+      resizeMode: "contain",
+      width: '100%',
+      height: '100%',
     },
+
+    logo:
+    {
+      width:208/414 * windowWidth,
+      height:208/896 * windowHeight,
+      left:103/414 * windowWidth,
+      top:59/896 * windowHeight,
+      position:'absolute'
+    },
+
+    logoimg:
+    {
+      width:'100%',
+      height:'100%',
+      resizeMode:'contain'
+   },
 
 
     RectangleShapeView: 
     {
         position: "absolute",
-        width: 304,
-        height: 233,
-        left: 55,
-        top: 292,
+        width: 304/414 * windowWidth,
+        height: 233/896 * windowHeight,
+        left: 55/414 * windowWidth,
+        top: 292/896 * windowHeight,
         backgroundColor: 'rgba(255, 255, 255, 0.2)',
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
@@ -78,8 +99,8 @@ const styles = StyleSheet.create({
 
     background: {
         position: "relative",
-        width: 414,
-        height: 896,
+        width: 414/414 * windowWidth,
+        height: 896/896 * windowHeight,
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
         borderBottomRightRadius: 15,
@@ -89,10 +110,10 @@ const styles = StyleSheet.create({
     RegText:
     {
         position: "absolute",
-        width: 77,
-        height: 21,
-        left: 169,
-        top: 308,
+        width: 77/414 * windowWidth,
+        height: 21/896 * windowHeight,
+        left: 169/414 * windowWidth,
+        top: 308/896 * windowHeight,
         fontFamily: "Roboto",
         fontStyle: "normal",
         fontWeight: "bold",
@@ -104,10 +125,10 @@ const styles = StyleSheet.create({
     CreateNewAccTxt:
     {
         position: "absolute",
-        width: 240,
-        height: 15,
-        left: 92,
-        top: 336,
+        width: 240/414 * windowWidth,
+        height: 15/896 * windowHeight,
+        left: 92/414 * windowWidth,
+        top: 336/896 * windowHeight,
         fontFamily: "Roboto",
         fontStyle: "normal",
         fontWeight: "500",
@@ -119,10 +140,10 @@ const styles = StyleSheet.create({
     InputStyle:
     {
         position: "absolute",
-        width: 224,
-        height: 40,
-        left: 95,
-        top: 385,
+        width: 224/414 * windowWidth,
+        height: 40/896 * windowHeight,
+        left: 95/414 * windowWidth,
+        top: 385/896 * windowHeight,
         paddingLeft: 10,
         backgroundColor: "#e5e5e5"
       },
@@ -130,29 +151,29 @@ const styles = StyleSheet.create({
     HaveAccTxt:
     {
         position: "absolute",
-        width: 119,
-        height: 15,
-        left: 95,
-        top: 435,
+        width: 119/414 * windowWidth,
+        height: 15/896 * windowHeight,
+        left: 95/414 * windowWidth,
+        top: 435/896 * windowHeight,
         
       },
 
     SignUpText:
     {
         position: "absolute",
-        width: 58,
-        height: 9,
-        left: 262,
-        top: 435,
+        width: 58/414 * windowWidth,
+        height: 9/896 * windowHeight,
+        left: 262/414 * windowWidth,
+        top: 435/896 * windowHeight,
       },
 
     Button:
     {
         position: "absolute",
-        width: 224,
-        height: 37,
-        left: 95,
-        top: 456,
+        width: 224/414 * windowWidth,
+        height: 37/896 * windowHeight,
+        left: 95/414 * windowWidth,
+        top: 456/896 * windowHeight,
         backgroundColor: "#FFC700",
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
