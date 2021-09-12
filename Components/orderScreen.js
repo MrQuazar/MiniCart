@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
 import { Text, View, StyleSheet, ImageBackground, Image, TouchableOpacity } from 'react-native';
+import { Dimensions } from 'react-native';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 export default function Order({ navigation }) {
     const [state, setState] = useState({ orderNo: 0 })
@@ -11,33 +15,30 @@ export default function Order({ navigation }) {
     return (
         <View style={styles.container}>
             <Text style={styles.OrderNumber}>Order Number:</Text>
-            <ImageBackground source={require('./../assets/Rectangle10.png')} style={styles.NumbDisplay}>
+            <View style={styles.NumbDisplay}>
                 <Text style={styles.CodeStyle} >{state.orderNo}</Text>
-            </ImageBackground>
+            </View>
             <TouchableOpacity style={styles.Button1Style}
                 onPress={() => { ordrPlaced() }}>
-                <Image source={require('./../assets/OdrBtn.png')} style={{ resizeMode: 'cover', width: '100%', height: '100%' }} />
+                <Image source={require('./../assets/OdrBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.Button2Style}
-                onPress={() => {navigation.navigate("ThankyouPage")}} >
-                <Image source={require('./../assets/ReceivedBtn.png')} style={{ resizeMode: 'cover', width: '100%', height: '100%' }} />
+                onPress={() => { navigation.navigate("ThankyouPage") }} >
+                <Image source={require('./../assets/ReceivedBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
         </View>
     );
 }
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        justifyContent: 'center',
+        "position": "relative",
+        "width": windowWidth,
+        "height": windowHeight,
     },
     OrderNumber: {
         position: "absolute",
-        width: 151,
-        height: 25,
-        left: 45,
-        top: 60,
+        left: 0.178 * windowWidth,
+        top: 0.237 * windowHeight,
         fontStyle: "normal",
         fontWeight: "normal",
         fontSize: 20,
@@ -45,43 +46,32 @@ const styles = StyleSheet.create({
     },
     NumbDisplay: {
         position: "absolute",
-        width: 267,
-        height: 238,
-        left: 45,
-        top: 100,
+        width: 0.644 * windowWidth,
+        height: 0.266 * windowHeight,
+        left: 0.178 * windowWidth,
+        top: 0.304 * windowHeight,
         backgroundColor: "#FFFFFF",
         borderWidth: 1,
         borderColor: "#000000",
         borderStyle: "solid",
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
-        borderBottomRightRadius: 25,
-        borderBottomLeftRadius: 25,
-        alignItems: 'center',
-        justifyContent: 'center'
+        borderRadius: 25,
+        alignItems: "center"
     },
     Button1Style: {
         position: "absolute",
-        width: 177.65,
-        height: 64.9,
-        left: 95,
-        top: 370,
-        alignItems: 'center',
-        justifyContent: 'center'
+        width: 0.429 * windowWidth,
+        height: 0.072 * windowHeight,
+        left: 0.285 * windowWidth,
+        top: 0.646 * windowHeight,
     },
     Button2Style: {
         position: "absolute",
-        width: 177.65,
-        height: 64.9,
-        left: 95,
-        top: 450,
-        alignItems: 'center',
-        justifyContent: 'center'
+        width: 0.429 * windowWidth,
+        height: 0.072 * windowHeight,
+        left: 0.285 * windowWidth,
+        top: 0.757 * windowHeight,
     },
     CodeStyle: {
-        position: "absolute",
-        width: 214,
-        height: 125,
         fontStyle: "normal",
         fontWeight: "normal",
         fontSize: 100,
