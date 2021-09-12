@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
+import { View, StyleSheet, Image, Dimensions, TouchableWithoutFeedback } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 
@@ -7,28 +7,25 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('screen').height
 
 
-export default function ThankyouPage() {
-
-
+export default function ThankyouPage({ navigation }) {
     return (
-        <View style={styles.container}>
-            <LinearGradient
-                start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }}
-                colors={['#D49CFF', '#8F00FF', '#0038FF', '#102265']}
-                style={styles.background} />
-            <View style={styles.smilingcart}>
-                <Image source={require('../assets/smilecart.png')}
-                    style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+        <TouchableWithoutFeedback onPress={() => navigation.navigate("QR Screen")}>
+            <View style={styles.container} >
+                <LinearGradient
+                    start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }}
+                    colors={['#D49CFF', '#8F00FF', '#0038FF', '#102265']}
+                    style={styles.background} />
+                <View style={styles.smilingcart}>
+                    <Image source={require('../assets/smilecart.png')}
+                        style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                </View>
+                <View style={styles.thankyou}>
+                    <Image source={require('../assets/ThankYou.png')}
+                        style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                </View>
             </View>
-            <View style={styles.thankyou}>
-                <Image source={require('../assets/ThankYou.png')}
-                    style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-            </View>
-        </View>
-
-
+        </TouchableWithoutFeedback>
     );
-
 }
 
 const styles = StyleSheet.create({
@@ -43,10 +40,6 @@ const styles = StyleSheet.create({
         position: "relative",
         width: windowWidth,
         height: windowHeight,
-        borderTopLeftRadius: 15,
-        borderTopRightRadius: 15,
-        borderBottomRightRadius: 15,
-        borderBottomLeftRadius: 15
     },
 
     smilingcart: {

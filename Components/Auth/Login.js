@@ -81,10 +81,6 @@ const styles = StyleSheet.create({
     position: "relative",
     width: 414 / 414 * windowWidth,
     height: 896 / 896 * windowHeight,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    borderBottomRightRadius: 15,
-    borderBottomLeftRadius: 15
   },
 
   logo:
@@ -116,7 +112,6 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     color: "#FFC700"
   },
-
   CreateNewAccTxt:
   {
     position: "absolute",

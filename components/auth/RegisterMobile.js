@@ -97,12 +97,8 @@ const styles = StyleSheet.create({
 
   background: {
     position: "relative",
-    width: windowWidth,
-    height: windowHeight,
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    borderBottomRightRadius: 15,
-    borderBottomLeftRadius: 15
+    width: 414 / 414 * windowWidth,
+    height: 896 / 896 * windowHeight,
   },
 
   RegText:

@@ -22,7 +22,7 @@ export default function Order({ navigation }) {
     }
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.ToCart} onPress={() => navigation.navigate("Order Screen")}>
+            <TouchableOpacity style={styles.ToCart} onPress={() => navigation.navigate("cart")}>
                 <Image source={require('../assets/ToCart.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
             <View style={styles.Scanner}>
@@ -37,7 +37,7 @@ export default function Order({ navigation }) {
                 <Text style={styles.CodeStyle3} >Shop:{state.Shop}</Text>
             </View>
             <TouchableOpacity style={styles.AddBtn} onPress={() => { Adder() }}>
-                <Image source={require('../assets/AddBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                <Image source={require('../assets/AddItemBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.CancelBtn} onPress={() => { Remover() }}>
                 <Image source={require('../assets/CancelBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
