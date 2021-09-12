@@ -1,6 +1,10 @@
 import React from 'react'
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
+import { Dimensions } from 'react-native';
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('screen').height;
 
 import logo from '../../assets/TheIcon.png'
 import arrow from '../../assets/Arrow.png'
@@ -16,7 +20,9 @@ export default function FinishRegistration({ navigation }){
            <TouchableOpacity style={styles.Arrow} onPress={() => navigation.navigate("EnterOTP")} >
             <Image source={arrow} style={styles.ArrowHead}/>
             </TouchableOpacity>
-            <Image source={logo} style={{width:208,height:208,left:103,top:59,position:'absolute'}}/>
+            <View style={styles.logo}>
+            <Image source={logo} style={styles.logoimg}/>
+            </View>
             <View style={styles.RectangleShapeView} />
             <Text style={styles.RegText}>Register</Text>
             <Text style={styles.CreateNewAccTxt}>Set your Username and Password</Text>
@@ -30,36 +36,51 @@ export default function FinishRegistration({ navigation }){
 
 const styles = StyleSheet.create({
     container: {
-      flex: 1,
-      backgroundColor: '#fff',
-      alignItems: 'center',
-      justifyContent: 'center',
+    position: "relative",
+    width: windowWidth,
+    height: windowHeight, 
     },
 
     Arrow:
     {
       position: "absolute",
-      width: 29,
-      height: 21,
-      left: 10,
-      top: 38
+      width: 29/414 * windowWidth,
+      height: 21/896 * windowHeight,
+      left: 10/414 * windowWidth,
+      top: 60/896 * windowHeight
     },
 
     ArrowHead:
     {
-      position: "absolute",
-      width: 29,
-      height: 21,
+      resizeMode: "contain",
+      width: 29/414 * windowWidth,
+      height: 21/896 * windowHeight,
     },
+
+    logo:
+    {
+      width:208/414 * windowWidth,
+      height:208/896 * windowHeight,
+      left:103/414 * windowWidth,
+      top:59/896 * windowHeight,
+      position:'absolute'
+    },
+
+    logoimg:
+    {
+      width:'100%',
+      height:'100%',
+      resizeMode:'contain'
+   },
 
 
     RectangleShapeView: 
     {
         position: "absolute",
-        width: 304,
-        height: 287,
-        left: 55,
-        top: 292,
+        width: 304/414 * windowWidth,
+        height: 287/896 * windowHeight,
+        left: 55/414 * windowWidth,
+        top: 292/896 * windowHeight,
         backgroundColor: 'rgba(255, 255, 255, 0.2)',
         borderTopLeftRadius: 25,
         borderTopRightRadius: 25,
@@ -69,8 +90,8 @@ const styles = StyleSheet.create({
 
     background: {
         position: "relative",
-        width: 414,
-        height: 896,
+        width: 414/414 * windowWidth,
+        height: 896/896 * windowHeight,
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
         borderBottomRightRadius: 15,
@@ -80,10 +101,10 @@ const styles = StyleSheet.create({
     RegText:
     {
         position: "absolute",
-        width: 77,
-        height: 21,
-        left: 169,
-        top: 308,
+        width: 77/414 * windowWidth,
+        height: 21/896 * windowHeight,
+        left: 169/414 * windowWidth,
+        top: 308/896 * windowHeight,
         fontFamily: "Roboto",
         fontStyle: "normal",
         fontWeight: "bold",
@@ -95,10 +116,10 @@ const styles = StyleSheet.create({
     CreateNewAccTxt:
     {
         position: "absolute",
-        width: 200,
-        height: 15,
-        left: 116,
-        top: 336,
+        width: 200/414 * windowWidth,
+        height: 15/896 * windowHeight,
+        left: 116/414 * windowWidth,
+        top: 336/896 * windowHeight,
         fontFamily: "Roboto",
         fontStyle: "normal",
         fontWeight: "500",
@@ -110,10 +131,10 @@ const styles = StyleSheet.create({
     InputStyle1:
     {
         position: "absolute",
-        width: 224,
-        height: 40,
-        left: 95,
-        top: 385,
+        width: 224/414 * windowWidth,
+        height: 40/896 * windowHeight,
+        left: 95/414 * windowWidth,
+        top: 385/896 * windowHeight,
         paddingLeft: 10,
         backgroundColor: "#e5e5e5"
       },
@@ -121,10 +142,10 @@ const styles = StyleSheet.create({
       InputStyle2:
     {
         position: "absolute",
-        width: 224,
-        height: 40,
-        left: 95,
-        top: 439,
+        width: 224/414 * windowWidth,
+        height: 40/896 * windowHeight,
+        left: 95/414 * windowWidth,
+        top: 439/896 * windowHeight,
         paddingLeft: 10,
         backgroundColor: "#e5e5e5"
 },
@@ -132,10 +153,10 @@ const styles = StyleSheet.create({
     Button:
     {
         position: "absolute",
-        width: 224,
-        height: 37,
-        left: 95,
-        top: 510,
+        width: 224/414 * windowWidth,
+        height: 37/896 * windowHeight,
+        left: 95/414 * windowWidth,
+        top: 510/896 * windowHeight,
         backgroundColor: "#FFC700",
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,

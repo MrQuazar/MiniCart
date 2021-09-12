@@ -41,8 +41,8 @@ const styles = StyleSheet.create({
 
     background: {
         position: "relative",
-        width: 414,
-        height: 896,
+        width: windowWidth,
+        height: windowHeight,
         borderTopLeftRadius: 15,
         borderTopRightRadius: 15,
         borderBottomRightRadius: 15,
