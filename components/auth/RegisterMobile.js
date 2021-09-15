@@ -3,11 +3,11 @@ import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'reac
 import { LinearGradient } from 'expo-linear-gradient'
 import { Dimensions } from 'react-native';
 
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('screen').height;
-
 import logo from '../../assets/TheIcon.png'
 import arrow from '../../assets/Arrow.png'
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('screen').height;
 
 export default function RegisterMobile({ navigation }) {
   return (
