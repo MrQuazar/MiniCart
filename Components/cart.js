@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
 
 import qrScan from './../assets/qrScan.png'
@@ -14,35 +14,43 @@ import 'firebase/database'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Items=[];
-
-fire.database().ref('Items').once('value',(data) =>{
-  const obj = data.toJSON()
-  for ( let i in obj){
-    Items.push(obj[i])
-  }
-
-})
+const Items = [];
 
 console.log(Items)
 
-const itemsList=[];
+const itemsList = [];
 
 for (let i = 0; i < Items.length; i++) {
   itemsList.push(
-    <Image source={{uri: Items[i].Image}}/>,
+    <Image source={{ uri: Items[i].Image }} />,
     console.log(Items[i].Image)
   )
 }
+export default function Cart({ navigation }, { Items }) {
 
-export default function Cart({ navigation }) {
   const [state, setState] = useState({ productNo: 2, prodPrice: 100, prodName: 'Faber Castell Assorted 20 ml, Pack of 6 colors', totalCost: 200 })
+  const [mounted, setMounted] = useState(false)
+
+
+  useEffect(() => {
+    fire.database().ref('Items').once('value', (data) => {
+      const obj = data.toJSON()
+      for (let i in obj) {
+        Items.push(obj[i])
+      }
+    })
+  }, [])
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF', justifyContent: 'center' }}>
-      {Items.map((Item) => {
-        <Image source={{uri: Item.Image}} key={Item.Name}/>,
-        console.log(Item.Image)
-      })}
+      <View>
+        {Items.map((item, index) => {
+          return (
+            <View key={index}>
+              <Text>{item.Name}</Text>
+            </View>
+          );
+        })}
+      </View>
       <TouchableOpacity style={styles.qrScanStyle} onPress={() => navigation.navigate("QR Screen")}>
         <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
       </TouchableOpacity>
@@ -205,5 +213,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 5
-  }
+  },
 });
