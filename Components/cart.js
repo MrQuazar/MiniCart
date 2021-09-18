@@ -10,68 +10,43 @@ import { Dimensions } from 'react-native';
 
 import fire from './firebase';
 import 'firebase/database'
+import { render } from 'react-dom';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Items = [];
-
-console.log(Items)
-
-const itemsList = [];
-
-for (let i = 0; i < Items.length; i++) {
-  itemsList.push(
-    <Image source={{ uri: Items[i].Image }} />,
-    console.log(Items[i].Image)
-  )
-}
-export default function Cart({ navigation }, { Items }) {
-
-  const [state, setState] = useState({ productNo: 2, prodPrice: 100, prodName: 'Faber Castell Assorted 20 ml, Pack of 6 colors', totalCost: 200 })
-  const [mounted, setMounted] = useState(false)
 
 
-  useEffect(() => {
-    fire.database().ref('Items').once('value', (data) => {
-      const obj = data.toJSON()
-      for (let i in obj) {
-        Items.push(obj[i])
-      }
-    })
-  }, [])
+// for (let i = 0; i < items.length; i++) {
+//   itemsList.push(
+//     <Image source={{ uri: items[i].image }} />,
+//     console.log(items[i].image)
+//   )
+// }
+
+
+
+export default function Cart() {
+  const items = [];
+  const itemsList = [];
+
+  fire.database().ref('Items').once('value', (data) => {
+    const obj = data.toJSON()
+    for (let i in obj) {
+      items.push(obj[i])
+    }
+  })
+
+  console.log(items)
+  const data = [{ "name": "test1", "place": "Chandigarh" }, { "name": "test2", "place": "Mumbai" }, { "name": "test3", "place": "Patna" }, { "name": "test4", "place": "Delhi" }];
+  console.log(data)
+  const bucket = items;
+  console.log(bucket)
   return (
-    <View style={{ flex: 1, backgroundColor: '#FFFFFF', justifyContent: 'center' }}>
-      <View>
-        {Items.map((item, index) => {
-          return (
-            <View key={index}>
-              <Text>{item.Name}</Text>
-            </View>
-          );
-        })}
-      </View>
-      <TouchableOpacity style={styles.qrScanStyle} onPress={() => navigation.navigate("QR Screen")}>
-        <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.prod1Style} >
-        <Image source={prod1} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.buyBtnStyle} onPress={() => navigation.navigate("Order Screen")}>
-        <Image source={buybtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.addStyle}>
-        <Image source={addbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.minusStyle}>
-        <Image source={minusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-      </TouchableOpacity>
-      <TextInput style={styles.InputStyle1} placeholder='Search here'></TextInput>
-      <Text style={styles.totalText}>Total:</Text>
-      <Text style={styles.cartTotal}>₹{state.totalCost}</Text>
-      <Text style={styles.itemName}>{state.prodName}</Text>
-      <Text style={styles.itemPrice}>₹{state.prodPrice}</Text>
-      <Text style={styles.itemQuantity}>{state.productNo}</Text>
+    <View style={styles.container}>
+      {items.map(function (d, idx) {
+        return (<li key={idx}>{d.Name}</li>)
+      })}
     </View>
   )
 }
