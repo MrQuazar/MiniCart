@@ -14,64 +14,67 @@ import 'firebase/database'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const Items = [];
-
-console.log(Items)
 
 const itemsList = [];
-
+/*
 for (let i = 0; i < Items.length; i++) {
   itemsList.push(
     <Image source={{ uri: Items[i].Image }} />,
     console.log(Items[i].Image)
   )
-}
-export default function Cart({ navigation }, { Items }) {
+}*/
+export default function Cart({ navigation }) {
 
   const [state, setState] = useState({ productNo: 2, prodPrice: 100, prodName: 'Faber Castell Assorted 20 ml, Pack of 6 colors', totalCost: 200 })
-  const [mounted, setMounted] = useState(false)
+  const [itemsArray, setItemsArray] = React.useState([]);
+  
+  React.useEffect(() => {
+    fire.database().ref('Items').on('value', snapshot => {
+      let data = snapshot.val();
+      const items = Object.values(data);
+      setItemsArray(items);
+    });
+  }, []);
 
+  console.log(itemsArray)
 
-  useEffect(() => {
-    fire.database().ref('Items').once('value', (data) => {
-      const obj = data.toJSON()
-      for (let i in obj) {
-        Items.push(obj[i])
-      }
-    })
-  }, [])
+  if(!itemsArray){return(<Text>The page is loading</Text>)}
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF', justifyContent: 'center' }}>
-      <View>
-        {Items.map((item, index) => {
+      <View style={styles.itemsList}>
+        {itemsArray.map((item, index) => {
           return (
-            <View key={index}>
-              <Text>{item.Name}</Text>
-            </View>
+            <View key={index} style={{flexDirection:'row',maxHeight: 100/896 * windowHeight}}>
+              <TouchableOpacity style={styles.prod1Style} >
+                <Image source={{uri: item.Image}} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+              </TouchableOpacity>
+              
+              <TouchableOpacity style={styles.addStyle}>
+                <Image source={addbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+              </TouchableOpacity>
+              
+              <TouchableOpacity style={styles.minusStyle}>
+                <Image source={minusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+              </TouchableOpacity>
+              
+              <Text style={styles.itemName}>{item.Name}</Text>
+              <Text style={styles.itemPrice}>₹{item.Price}</Text>
+              <Text style={styles.itemQuantity}>{state.productNo}</Text>
+              </View>
           );
         })}
       </View>
       <TouchableOpacity style={styles.qrScanStyle} onPress={() => navigation.navigate("QR Screen")}>
         <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.prod1Style} >
-        <Image source={prod1} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-      </TouchableOpacity>
       <TouchableOpacity style={styles.buyBtnStyle} onPress={() => navigation.navigate("Order Screen")}>
         <Image source={buybtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.addStyle}>
-        <Image source={addbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.minusStyle}>
-        <Image source={minusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-      </TouchableOpacity>
-      <TextInput style={styles.InputStyle1} placeholder='Search here'></TextInput>
       <Text style={styles.totalText}>Total:</Text>
       <Text style={styles.cartTotal}>₹{state.totalCost}</Text>
-      <Text style={styles.itemName}>{state.prodName}</Text>
-      <Text style={styles.itemPrice}>₹{state.prodPrice}</Text>
-      <Text style={styles.itemQuantity}>{state.productNo}</Text>
+      <TextInput style={styles.InputStyle1} placeholder='Search here'></TextInput>
+
+
     </View>
   )
 }
@@ -82,6 +85,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  itemsList: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-around'
   },
 
   background: {
@@ -109,7 +117,6 @@ const styles = StyleSheet.create({
     "width": 0.246377 * windowWidth,
     "height": 0.10379 * windowHeight,
     "left": 0.05314 * windowWidth,
-    "top": 0.31808 * windowHeight
   },
 
   minusStyle: {
@@ -117,7 +124,6 @@ const styles = StyleSheet.create({
     "width": 0.08454 * windowWidth,
     "height": 0.04241 * windowHeight,
     "left": 0.75 * windowWidth,
-    "top": 0.39 * windowHeight
   },
 
   addStyle: {
@@ -125,7 +131,6 @@ const styles = StyleSheet.create({
     "width": 0.08454 * windowWidth,
     "height": 0.04241 * windowHeight,
     "left": 0.5 * windowWidth,
-    "top": 0.39 * windowHeight
   },
 
   buyBtnStyle: {
@@ -166,7 +171,8 @@ const styles = StyleSheet.create({
     width: 240,
     height: 38,
     "left": 0.32367 * windowWidth,
-    "top": 0.31808 * windowHeight,
+    textAlign: 'center',
+
 
     fontStyle: "normal",
     fontWeight: "normal",
@@ -178,7 +184,7 @@ const styles = StyleSheet.create({
   itemPrice: {
     position: "absolute",
     "left": 0.32 * windowWidth,
-    "top": 0.379 * windowHeight,
+    textAlign: 'center',
 
     fontStyle: "normal",
     fontWeight: "normal",
@@ -190,7 +196,8 @@ const styles = StyleSheet.create({
   itemQuantity: {
     position: "absolute",
     "left": 0.64 * windowWidth,
-    "top": 0.39 * windowHeight,
+    textAlign: 'center',
+
 
     fontStyle: "normal",
     fontWeight: "normal",
