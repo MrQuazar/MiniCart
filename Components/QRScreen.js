@@ -2,11 +2,26 @@ import React, { useState } from 'react';
 import { Text, View, ScrollView, StyleSheet, ImageBackground, Image, TouchableOpacity } from 'react-native';
 import { Dimensions } from 'react-native';
 
+import fire from './firebase';
+import 'firebase/database'
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export default function Order({ navigation }) {
     const [state, setState] = useState({ Name: "Oreo", Price: 30, Shop: "Rizvi Market" })
+    const [qrCode, setqrCode] = useState("RM2")
+    const [itemsArray, setItemsArray] = React.useState([]);
+
+    React.useEffect(() => {
+        fire.database().ref('Items').orderByChild("ItemId").equalTo(qrCode).on('value', snapshot => {
+            let data = snapshot.val();
+            const items = Object.values(data);
+            setItemsArray(items);
+        });
+    }, []);
+
+    console.log(itemsArray)
     //assign values to display
     function shouldScan() {
         alert('Scanned');
@@ -14,12 +29,14 @@ export default function Order({ navigation }) {
     }
     function Adder() {
         alert('Item added');
+
         //adds item for list page;
     }
     function Remover() {
         alert('Cancelled');
         //removes all values displayed;
     }
+    if (!itemsArray) { return (<Text>The page is loading</Text>) }
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.ToCart} onPress={() => navigation.navigate("cart")}>
@@ -31,10 +48,15 @@ export default function Order({ navigation }) {
             <TouchableOpacity style={styles.ScanBtn} onPress={() => { shouldScan() }}>
                 <Image source={require('../assets/ScanBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
-            <View style={styles.InfoDisplay}>
-                <Text style={styles.CodeStyle1} >Name:{state.Name}</Text>
-                <Text style={styles.CodeStyle2} >Price:{state.Price}</Text>
-                <Text style={styles.CodeStyle3} >Shop:{state.Shop}</Text>
+            <View>
+                {itemsArray.map((item, index) => {
+                    return (
+                        <View key={index} style={styles.InfoDisplay}>
+                            <Text style={styles.CodeStyle1} >Name:{item.Name}</Text>
+                            <Text style={styles.CodeStyle2} >Price:{item.Price}</Text>
+                        </View>
+                    );
+                })}
             </View>
             <TouchableOpacity style={styles.AddBtn} onPress={() => { Adder() }}>
                 <Image source={require('../assets/AddItemBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />

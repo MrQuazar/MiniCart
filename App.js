@@ -19,7 +19,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName='cart'>
+      <Stack.Navigator initialRouteName='QR Screen'>
         <Stack.Screen name='Login' component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name='Order Screen' component={OrderScreen} options={{ headerShown: false }} />
         <Stack.Screen name='RegisterMobile' component={RegisterMobileScreen} options={{ headerShown: false }} />
