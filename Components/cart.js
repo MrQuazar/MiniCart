@@ -10,6 +10,7 @@ import { Dimensions } from 'react-native';
 
 import fire from './firebase';
 import 'firebase/database'
+import { render } from 'react-dom';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
