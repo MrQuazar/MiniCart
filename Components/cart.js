@@ -18,24 +18,25 @@ const windowHeight = Dimensions.get('window').height;
 export default function Cart({ route, navigation }) {
 
   const [state, setState] = useState({ productNo: 2, prodPrice: 100, prodName: 'Faber Castell Assorted 20 ml, Pack of 6 colors', totalCost: 200 })
-  const [newItemsArray, setNewItemsArray] = React.useState([]);
-  setNewItemsArray(route.params)
+  const [QRarray, setQRarray] = React.useState(route.params ? route.params : []);
+  const [newItemsArray, setNewItemsArray] = useState([]);
 
-  React.useEffect(() => {
-    fire.database().ref('Items').on('value', snapshot => {
+  for (let i = 0; i < QRarray.length; i++) {
+    fire.database().ref('Items').orderByChild("ItemId").equalTo(QRarray[i]).on('value', snapshot => {
       let data = snapshot.val();
       const items = Object.values(data);
-      setNewItemsArray(items);
+      newItemsArray.push(items[0]);
     });
-  }, []);
+  }
 
-  console.log(newItemsArray.itemsArray)
+  console.log(QRarray)
+  console.log(newItemsArray)
 
-  if (!newItemsArray.itemsArray) { return (<Text>The page is loading</Text>) }
+  if (!newItemsArray) { return (<Text>The page is loading</Text>) }
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF', justifyContent: 'center' }}>
       <View style={styles.itemsList}>
-        {newItemsArray.itemsArray.map((item, index) => {
+        {newItemsArray.map((item, index) => {
           return (
             <View key={index} style={{ flexDirection: 'row', maxHeight: 100 / 896 * windowHeight }}>
               <TouchableOpacity style={styles.prod1Style} >

@@ -12,8 +12,9 @@ const windowHeight = Dimensions.get('window').height;
 export default function QRScreen({ navigation }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
-    const [qrCode, setqrCode] = useState("RM0");
+    const [qrCode, setqrCode] = useState("RM2");
     const [itemsArray, setItemsArray] = React.useState([]);
+    const [savedItems, setSavedItems] = React.useState([]);
 
     const askForCameraPermission = () => {
         (async () => {
@@ -45,15 +46,20 @@ export default function QRScreen({ navigation }) {
         });
     }, []);
 
-    console.log(itemsArray)
     //assign values to display
     function shouldScan() {
         alert('Camera on');
         //scan and display values;
     }
+    function toCart() {
+        navigation.navigate("cart", savedItems);
+        //scan and display values;
+    }
     function Adder() {
         setScanned(false);
-        navigation.navigate("cart", { itemsArray });
+        console.log(itemsArray);
+        savedItems.push(itemsArray[0].ItemId);
+        console.log(savedItems)
         setItemsArray([{ "Name": "", "Price": "" }]);
         //adds item for list page;
     }
@@ -82,7 +88,7 @@ export default function QRScreen({ navigation }) {
                     onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
                     style={styles.Scanner} />
             </View>
-            <TouchableOpacity style={styles.ToCart} onPress={() => navigation.navigate("cart")}>
+            <TouchableOpacity style={styles.ToCart} onPress={() => { toCart() }}>
                 <Image source={require('../assets/ToCart.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
             <TouchableOpacity style={styles.ScanBtn} onPress={() => { shouldScan() }}>
