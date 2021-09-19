@@ -6,6 +6,8 @@ import prod1 from './../assets/prod1.png'
 import buybtn from './../assets/buybtn.png'
 import addbtn from './../assets/addbtn.png'
 import minusbtn from './../assets/minusbtn.png'
+import plusbtn from './../assets/plusbtn.png'
+import divider from './../assets/divider.png'
 import { Dimensions } from 'react-native';
 
 import fire from './firebase';
@@ -26,7 +28,7 @@ for (let i = 0; i < Items.length; i++) {
 }*/
 export default function Cart({ navigation }) {
 
-  const [state, setState] = useState({ productNo: 2, prodPrice: 100, prodName: 'Faber Castell Assorted 20 ml, Pack of 6 colors', totalCost: 200 })
+  const [state, setState] = useState({ productNo: 2, prodPrice: 100, prodName: 'Faber Castell Assorted 20 ml, Pack of 6 colors', totalCost: 200, totalItems: 2})
   const [itemsArray, setItemsArray] = React.useState([]);
   
   React.useEffect(() => {
@@ -46,12 +48,17 @@ export default function Cart({ navigation }) {
         {itemsArray.map((item, index) => {
           return (
             <View key={index} style={{flexDirection:'row',maxHeight: 100/896 * windowHeight}}>
+
+            <TouchableOpacity style={styles.dividerStyle}>
+              <Image source={divider} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+            </TouchableOpacity>
+
               <TouchableOpacity style={styles.prod1Style} >
                 <Image source={{uri: item.Image}} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
               
-              <TouchableOpacity style={styles.addStyle}>
-                <Image source={addbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+              <TouchableOpacity style={styles.plusStyle}>
+                <Image source={plusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
               
               <TouchableOpacity style={styles.minusStyle}>
@@ -68,8 +75,8 @@ export default function Cart({ navigation }) {
       <TouchableOpacity style={styles.qrScanStyle} onPress={() => navigation.navigate("QR Screen")}>
         <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.buyBtnStyle} onPress={() => navigation.navigate("Order Screen")}>
-        <Image source={buybtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+      <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => navigation.navigate("Order Screen")}>
+        <Text style={{color: "white"}}>Proceed to Buy {state.totalItems} items</Text>
       </TouchableOpacity>
       <Text style={styles.totalText}>Total:</Text>
       <Text style={styles.cartTotal}>₹{state.totalCost}</Text>
@@ -87,11 +94,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  itemsList: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-around'
-  },
 
   background: {
     position: "relative",
@@ -104,12 +106,22 @@ const styles = StyleSheet.create({
     "width": windowWidth,
     "height": windowHeight
   },
+  
+  itemsList: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-evenly',
+    "width": 414/414 * windowWidth,
+    "height": 0/896 * windowHeight,
+    "left": 0/414 * windowWidth,
+    "top": 0/896 * windowHeight,
+  },
 
   qrScanStyle: {
     "position": "absolute",
     "width": 0.09 * windowWidth,
     "height": 0.05 * windowHeight,
-    "left": 0.8599 * windowWidth,
+    "right": 26/414 * windowWidth,
     "top": 0.06 * windowHeight
   },
 
@@ -117,21 +129,32 @@ const styles = StyleSheet.create({
     "position": "absolute",
     "width": 0.246377 * windowWidth,
     "height": 0.10379 * windowHeight,
-    "left": 0.05314 * windowWidth,
+    "left": 22/414 * windowWidth,
+    "top": 18/896 * windowHeight,
   },
 
   minusStyle: {
     "position": "absolute",
     "width": 0.08454 * windowWidth,
     "height": 0.04241 * windowHeight,
-    "left": 0.75 * windowWidth,
+    "right": 26/414 * windowWidth,
+    "top": 84/896 * windowHeight,
   },
 
-  addStyle: {
+  plusStyle: {
     "position": "absolute",
     "width": 0.08454 * windowWidth,
     "height": 0.04241 * windowHeight,
-    "left": 0.5 * windowWidth,
+    "right": 122/414 * windowWidth,
+    "top": 84/896 * windowHeight,
+  },
+
+  dividerStyle: {
+    "position": "absolute",
+    "width": 800/414 * windowWidth,
+    "height": 1/896 * windowHeight,
+    "left": -200/414 * windowWidth,
+    "top": 267/896 * windowHeight,
   },
 
   buyBtnStyle: {
@@ -139,7 +162,15 @@ const styles = StyleSheet.create({
     "width": 0.8913 * windowWidth,
     "height": 0.0669 * windowHeight,
     "left": 0.0531 * windowWidth,
-    "top": 0.12 * windowHeight
+    "top": 0.12 * windowHeight,
+    backgroundColor: "#0137F4",
+    "color": "white",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 
   totalText:
@@ -157,7 +188,7 @@ const styles = StyleSheet.create({
 
   cartTotal: {
     position: "absolute",
-    "left": 0.7 * windowWidth,
+    "right": 26/414 * windowWidth,
     "top": 0.21875 * windowHeight,
 
     fontStyle: "normal",
@@ -171,8 +202,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 240,
     height: 38,
-    "left": 0.32367 * windowWidth,
-    textAlign: 'center',
+    "left": 134/414 * windowWidth,
+    "top": 18/896 * windowHeight,
+    textAlign: 'left',
 
 
     fontStyle: "normal",
@@ -185,6 +217,7 @@ const styles = StyleSheet.create({
   itemPrice: {
     position: "absolute",
     "left": 0.32 * windowWidth,
+    "top": 73/896 * windowHeight,
     textAlign: 'center',
 
     fontStyle: "normal",
@@ -196,7 +229,8 @@ const styles = StyleSheet.create({
 
   itemQuantity: {
     position: "absolute",
-    "left": 0.64 * windowWidth,
+    "right": 84/414 * windowWidth,
+    "top": 84/896 * windowHeight,
     textAlign: 'center',
 
 
