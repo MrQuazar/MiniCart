@@ -4,7 +4,7 @@ import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'reac
 import qrScan from './../assets/qrScan.png'
 import prod1 from './../assets/prod1.png'
 import buybtn from './../assets/buybtn.png'
-import addbtn from './../assets/addbtn.png'
+import addbtn from './../assets/AddBtn.png'
 import minusbtn from './../assets/minusbtn.png'
 import { Dimensions } from 'react-native';
 
@@ -15,10 +15,11 @@ import { render } from 'react-dom';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function Cart({ navigation }) {
+export default function Cart({ route, navigation }) {
 
   const [state, setState] = useState({ productNo: 2, prodPrice: 100, prodName: 'Faber Castell Assorted 20 ml, Pack of 6 colors', totalCost: 200 })
   const [newItemsArray, setNewItemsArray] = React.useState([]);
+  setNewItemsArray(route.params)
 
   React.useEffect(() => {
     fire.database().ref('Items').on('value', snapshot => {
@@ -28,13 +29,13 @@ export default function Cart({ navigation }) {
     });
   }, []);
 
-  console.log(newItemsArray)
+  console.log(newItemsArray.itemsArray)
 
-  if (!newItemsArray) { return (<Text>The page is loading</Text>) }
+  if (!newItemsArray.itemsArray) { return (<Text>The page is loading</Text>) }
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF', justifyContent: 'center' }}>
       <View style={styles.itemsList}>
-        {newItemsArray.map((item, index) => {
+        {newItemsArray.itemsArray.map((item, index) => {
           return (
             <View key={index} style={{ flexDirection: 'row', maxHeight: 100 / 896 * windowHeight }}>
               <TouchableOpacity style={styles.prod1Style} >

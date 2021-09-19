@@ -12,28 +12,30 @@ const windowHeight = Dimensions.get('window').height;
 export default function QRScreen({ navigation }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
-    const [text, setText] = useState('Not yet scanned')
+    const [qrCode, setqrCode] = useState("RM0");
+    const [itemsArray, setItemsArray] = React.useState([]);
 
     const askForCameraPermission = () => {
         (async () => {
-          const { status } = await BarCodeScanner.requestPermissionsAsync();
-          setHasPermission(status === 'granted');
+            const { status } = await BarCodeScanner.requestPermissionsAsync();
+            setHasPermission(status === 'granted');
         })()
-      }
+    }
 
     useEffect(() => {
         askForCameraPermission();
-    }, []);  
+    }, []);
 
     const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
-        setText(data)
+        setqrCode(data);
+        fire.database().ref('Items').orderByChild("ItemId").equalTo(qrCode).on('value', snapshot => {
+            let data = snapshot.val();
+            const items = Object.values(data);
+            setItemsArray(items);
+        });
         console.log('Type: ' + type + '\nData: ' + data)
-      };
-
-    const [state, setState] = useState({ Name: "Oreo", Price: 30, Shop: "Rizvi Market" })
-    const [qrCode, setqrCode] = useState("RM2")
-    const [itemsArray, setItemsArray] = React.useState([]);
+    };
 
     React.useEffect(() => {
         fire.database().ref('Items').orderByChild("ItemId").equalTo(qrCode).on('value', snapshot => {
@@ -46,49 +48,43 @@ export default function QRScreen({ navigation }) {
     console.log(itemsArray)
     //assign values to display
     function shouldScan() {
-        alert('Scanned');
+        alert('Camera on');
         //scan and display values;
     }
     function Adder() {
-        alert('Item added');
-
+        setScanned(false);
+        navigation.navigate("cart", { itemsArray });
+        setItemsArray([{ "Name": "", "Price": "" }]);
         //adds item for list page;
     }
     function Remover() {
-        alert('Cancelled');
+        setScanned(false);
+        setItemsArray([{ "Name": "", "Price": "" }]);
         //removes all values displayed;
     }
     if (hasPermission === null) {
         return (
-          <View style={styles.container}>
-            <Text>Requesting for camera permission</Text>
-          </View>)
-      }
-      if (hasPermission === false) {
+            <View style={styles.container}>
+                <Text>Requesting for camera permission</Text>
+            </View>)
+    }
+    if (hasPermission === false) {
         return (
-          <View style={styles.container}>
-            <Text style={{ margin: 10 }}>No access to camera</Text>
-            <Button title={'Allow Camera'} onPress={() => askForCameraPermission()} />
-          </View>)  
-      }
-    if (!itemsArray) { return (<Text>The page is loading</Text>) }
+            <View style={styles.container}>
+                <Text style={{ margin: 10 }}>No access to camera</Text>
+                <Button title={'Allow Camera'} onPress={() => askForCameraPermission()} />
+            </View>)
+    }
     return (
         <View style={styles.container}>
-            <View style={styles.barcodebox}>
+            <View >
                 <BarCodeScanner
-                onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                style={{ height: 400, width: 400 }} />
-           </View>
-           <Text style={styles.maintext}>{text}</Text>
-
-            {scanned && <Button title={'Scan again?'} onPress={() => setScanned(false)} color='tomato' />}
-            
+                    onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+                    style={styles.Scanner} />
+            </View>
             <TouchableOpacity style={styles.ToCart} onPress={() => navigation.navigate("cart")}>
                 <Image source={require('../assets/ToCart.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
-            <View style={styles.Scanner}>
-                <Image source={require('../assets/ScanPanel.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-            </View>
             <TouchableOpacity style={styles.ScanBtn} onPress={() => { shouldScan() }}>
                 <Image source={require('../assets/ScanBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
@@ -198,6 +194,6 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         borderRadius: 30,
         backgroundColor: 'tomato'
-      }
-      
+    }
+
 })
