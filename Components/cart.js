@@ -15,53 +15,44 @@ import { render } from 'react-dom';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-
-const itemsList = [];
-/*
-for (let i = 0; i < Items.length; i++) {
-  itemsList.push(
-    <Image source={{ uri: Items[i].Image }} />,
-    console.log(Items[i].Image)
-  )
-}*/
 export default function Cart({ navigation }) {
 
   const [state, setState] = useState({ productNo: 2, prodPrice: 100, prodName: 'Faber Castell Assorted 20 ml, Pack of 6 colors', totalCost: 200 })
-  const [itemsArray, setItemsArray] = React.useState([]);
-  
+  const [newItemsArray, setNewItemsArray] = React.useState([]);
+
   React.useEffect(() => {
     fire.database().ref('Items').on('value', snapshot => {
       let data = snapshot.val();
       const items = Object.values(data);
-      setItemsArray(items);
+      setNewItemsArray(items);
     });
   }, []);
 
-  console.log(itemsArray)
+  console.log(newItemsArray)
 
-  if(!itemsArray){return(<Text>The page is loading</Text>)}
+  if (!newItemsArray) { return (<Text>The page is loading</Text>) }
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF', justifyContent: 'center' }}>
       <View style={styles.itemsList}>
-        {itemsArray.map((item, index) => {
+        {newItemsArray.map((item, index) => {
           return (
-            <View key={index} style={{flexDirection:'row',maxHeight: 100/896 * windowHeight}}>
+            <View key={index} style={{ flexDirection: 'row', maxHeight: 100 / 896 * windowHeight }}>
               <TouchableOpacity style={styles.prod1Style} >
-                <Image source={{uri: item.Image}} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+                <Image source={{ uri: item.Image }} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
-              
+
               <TouchableOpacity style={styles.addStyle}>
                 <Image source={addbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
-              
+
               <TouchableOpacity style={styles.minusStyle}>
                 <Image source={minusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
-              
+
               <Text style={styles.itemName}>{item.Name}</Text>
               <Text style={styles.itemPrice}>₹{item.Price}</Text>
               <Text style={styles.itemQuantity}>{state.productNo}</Text>
-              </View>
+            </View>
           );
         })}
       </View>
