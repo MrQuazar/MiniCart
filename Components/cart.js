@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
 
 import qrScan from './../assets/qrScan.png'
 import prod1 from './../assets/prod1.png'
 import minusbtn from './../assets/minusbtn.png'
 import plusbtn from './../assets/plusbtn.png'
-import divider from './../assets/divider.png'
 import { Dimensions } from 'react-native';
 
 import fire from './firebase';
@@ -24,11 +23,26 @@ for (let i = 0; i < Items.length; i++) {
     console.log(Items[i].Image)
   )
 }*/
+
 export default function Cart({ navigation }) {
 
-  const [state, setState] = useState({ productNo: 2, prodPrice: 100, prodName: 'Faber Castell Assorted 20 ml, Pack of 6 colors', totalCost: 200})
+  const [state] = useState({ productNo: 1, prodPrice: 100, prodName: 'Faber Castell Assorted 20 ml, Pack of 6 colors', totalCost: 200})
   const [itemsArray, setItemsArray] = React.useState([]);
   const totalItems = itemsArray.length;
+/*
+  const incrementValue = () => {
+    this.setState({
+      productNo: this.state.productNo + 1
+    });
+  }
+
+  const decrementValue = () => {
+    this.setState({
+      productNo: this.state.productNo - 1
+    });
+  }
+  */
+
   React.useEffect(() => {
     fire.database().ref('Items').on('value', snapshot => {
       let data = snapshot.val();
@@ -50,11 +64,11 @@ export default function Cart({ navigation }) {
                 <Image source={{uri: item.Image}} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
               
-              <TouchableOpacity style={styles.plusStyle}>
+              <TouchableOpacity style={styles.plusStyle} onPress={() => this.setState({productNo: this.state.productNo + 1})}>
                 <Image source={plusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
               
-              <TouchableOpacity style={styles.minusStyle}>
+              <TouchableOpacity style={styles.minusStyle} onPress={() => this.setState({productNo: this.state.productNo + 1})}>
                 <Image source={minusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
                
@@ -77,6 +91,7 @@ export default function Cart({ navigation }) {
 
 
     </View>
+    
   )
 }
 /*
