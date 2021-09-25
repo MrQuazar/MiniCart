@@ -1,7 +1,11 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Dimensions } from 'react-native';
+import fire from '../firebase';
+import 'firebase/auth'
+import { FirebaseRecaptchaVerifierModal, FirebaseRecaptchaBanner } from 'expo-firebase-recaptcha';
+
 
 import logo from '../../assets/TheIcon.png'
 import arrow from '../../assets/Arrow.png'
@@ -9,13 +13,46 @@ import arrow from '../../assets/Arrow.png'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('screen').height;
 
+
+
 export default function RegisterMobile({ navigation }) {
+  const [confirm, setConfirm] = useState(null);
+  const recaptchaVerifier = React.useRef(null);
+  const [phoneNumber, setPhoneNumber] = React.useState();
+  const [verificationId, setVerificationId] = React.useState();
+  const [verificationCode, setVerificationCode] = React.useState();
+  const [message, showMessage] = React.useState(
+    !firebaseConfig || Platform.OS === 'web'
+      ? {
+        text:
+          'To get started, provide a valid firebase config in App.js and open this snack on an iOS or Android device.',
+      }
+      : undefined
+  );
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDwN90HSz0gNQ0cfdYZ_vzL9ZioCQHGgEM",
+    authDomain: "minicart-f10c8.firebaseapp.com",
+    projectId: "minicart-f10c8",
+    storageBucket: "minicart-f10c8.appspot.com",
+    messagingSenderId: "593395738188",
+    appId: "1:593395738188:web:99a0aad84cd23e1785b6e9",
+    measurementId: "G-19NVFJ1WX1",
+    databaseURL: "https://minicart-f10c8-default-rtdb.asia-southeast1.firebasedatabase.app"
+  };
+  const attemptInvisibleVerification = false;
+
   return (
     <View style={styles.container}>
       <LinearGradient
         start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }}
         colors={['#D49CFF', '#8F00FF', '#0038FF', '#102265']}
         style={styles.background}
+      />
+      <FirebaseRecaptchaVerifierModal
+        ref={recaptchaVerifier}
+        firebaseConfig={firebaseConfig}
+        attemptInvisibleVerification={attemptInvisibleVerification}
       />
       <TouchableOpacity style={styles.Arrow} onPress={() => navigation.navigate("Login")} >
         <Image source={arrow} style={styles.ArrowHead} />
@@ -26,7 +63,9 @@ export default function RegisterMobile({ navigation }) {
       <View style={styles.RectangleShapeView} />
       <Text style={styles.RegText}>Register</Text>
       <Text style={styles.CreateNewAccTxt}>Create a New Account</Text>
-      <TextInput style={styles.InputStyle} placeholder='Mobile Number' keyboardType='numeric'></TextInput>
+      <TextInput style={styles.InputStyle} placeholder='Mobile Number' keyboardType='phone-pad'
+        textContentType="telephoneNumber"
+        onChangeText={phoneNumber => setPhoneNumber(phoneNumber)}></TextInput>
       <TouchableOpacity style={styles.HaveAccTxt}>
         <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "500", fontSize: 10, lineHeight: 12, color: "rgba(231, 231, 231, 0.81)" }}>
           Have an account already?</Text>
@@ -37,8 +76,45 @@ export default function RegisterMobile({ navigation }) {
           Sign In</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.Button} title='Get OTP' onPress={() => navigation.navigate("EnterOTP")}>
+      <TouchableOpacity style={styles.Button} title='Get OTP'
+        onPress={async () => {
+          // The FirebaseRecaptchaVerifierModal ref implements the
+          // FirebaseAuthApplicationVerifier interface and can be
+          // passed directly to `verifyPhoneNumber`.
+          console.log(phoneNumber);
+          const phoneProvider = new fire.auth().PhoneAuthProvider();
+          const verificationId = await phoneProvider.verifyPhoneNumber(
+            phoneNumber,
+            recaptchaVerifier.current
+          );
+          setVerificationId(verificationId);
+          showMessage({
+            text: 'Verification code has been sent to your phone.',
+          });
+          console.log(verificationId)
+        }}>
         <Text style={styles.ButtonText}>Get OTP</Text></TouchableOpacity>
+      {message ? (
+        <TouchableOpacity
+          style={[
+            StyleSheet.absoluteFill,
+            { backgroundColor: 0xffffffee, justifyContent: 'center' },
+          ]}
+          onPress={() => showMessage(undefined)}>
+          <Text
+            style={{
+              color: message.color || 'blue',
+              fontSize: 17,
+              textAlign: 'center',
+              margin: 20,
+            }}>
+            {message.text}
+          </Text>
+        </TouchableOpacity>
+      ) : (
+        undefined
+      )}
+      {attemptInvisibleVerification && <FirebaseRecaptchaBanner />}
     </View>
   )
 }
