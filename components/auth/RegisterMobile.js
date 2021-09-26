@@ -19,8 +19,6 @@ export default function RegisterMobile({ navigation }) {
   const [confirm, setConfirm] = useState(null);
   const recaptchaVerifier = React.useRef(null);
   const [phoneNumber, setPhoneNumber] = React.useState();
-  const [verificationId, setVerificationId] = React.useState();
-  const [verificationCode, setVerificationCode] = React.useState();
   const [message, showMessage] = React.useState(
     !firebaseConfig || Platform.OS === 'web'
       ? {
@@ -41,7 +39,7 @@ export default function RegisterMobile({ navigation }) {
     databaseURL: "https://minicart-f10c8-default-rtdb.asia-southeast1.firebasedatabase.app"
   };
   const attemptInvisibleVerification = false;
-
+  
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -82,16 +80,15 @@ export default function RegisterMobile({ navigation }) {
           // FirebaseAuthApplicationVerifier interface and can be
           // passed directly to `verifyPhoneNumber`.
           console.log(phoneNumber);
-          const phoneProvider = new fire.auth().PhoneAuthProvider();
-          const verificationId = await phoneProvider.verifyPhoneNumber(
+          const confirmation = await  fire.auth().signInWithPhoneNumber(
             phoneNumber,
             recaptchaVerifier.current
           );
-          setVerificationId(verificationId);
+          setConfirm(confirmation);
           showMessage({
             text: 'Verification code has been sent to your phone.',
           });
-          console.log(verificationId)
+          navigation.navigate("EnterOTP",confirm)
         }}>
         <Text style={styles.ButtonText}>Get OTP</Text></TouchableOpacity>
       {message ? (

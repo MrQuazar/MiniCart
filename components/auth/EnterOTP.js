@@ -9,7 +9,9 @@ const windowHeight = Dimensions.get('screen').height;
 import logo from '../../assets/TheIcon.png'
 import arrow from '../../assets/Arrow.png'
 
-export default function EnterOTP({ navigation }) {
+export default function EnterOTP({ navigation,route }) {
+  const [confirm, setConfirm] = React.useState(route.params ?  route.params : []);
+  const [OTP,setOTP]=React.useState();
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -26,7 +28,8 @@ export default function EnterOTP({ navigation }) {
       <View style={styles.RectangleShapeView} />
       <Text style={styles.RegText}>Register</Text>
       <Text style={styles.CreateNewAccTxt}>We’ve sent an OTP on your Mobile Number</Text>
-      <TextInput style={styles.InputStyle} placeholder='Enter OTP' keyboardType='numeric'></TextInput>
+      <TextInput style={styles.InputStyle} placeholder='Enter OTP' keyboardType='numeric'
+        onChangeText={OTP => setOTP(OTP)}></TextInput>
       <TouchableOpacity style={styles.HaveAccTxt}>
         <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "500", fontSize: 10, lineHeight: 12, color: "rgba(231, 231, 231, 0.81)" }}>
           Didn’t receive OTP?</Text>
@@ -37,7 +40,18 @@ export default function EnterOTP({ navigation }) {
           Resend OTP</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.Button} title='Get OTP' onPress={() => navigation.navigate("FinishRegistration")}>
+      <TouchableOpacity style={styles.Button} title='Get OTP' 
+      onPress={
+        async () => {
+          try {
+            await confirm.confirm(OTP);
+            setConfirm(null);
+            alert('Correct');
+          } catch (error) {
+            alert('Invalid code');
+          }
+        }
+      }>
         <Text style={styles.ButtonText}>Continue</Text></TouchableOpacity>
     </View>
   )
