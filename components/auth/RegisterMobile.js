@@ -39,6 +39,7 @@ export default function RegisterMobile({ navigation }) {
     databaseURL: "https://minicart-f10c8-default-rtdb.asia-southeast1.firebasedatabase.app"
   };
   const attemptInvisibleVerification = false;
+
   
   return (
     <View style={styles.container}>

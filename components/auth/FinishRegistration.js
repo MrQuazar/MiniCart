@@ -2,6 +2,8 @@ import React from 'react'
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Dimensions } from 'react-native';
+import fire from '../firebase';
+import 'firebase/auth'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('screen').height;
@@ -10,6 +12,9 @@ import logo from '../../assets/TheIcon.png'
 import arrow from '../../assets/Arrow.png'
 
 export default function FinishRegistration({ navigation }) {
+  const user = fire.auth().currentUser;
+  const [UName, setUName] = React.useState();
+  const [PWord, setPWord] = React.useState();
   return (
     <View style={{ flex: 1, backgroundcolor: '#e5e5e5', justifyContent: 'center' }}>
       <LinearGradient
@@ -26,9 +31,26 @@ export default function FinishRegistration({ navigation }) {
       <View style={styles.RectangleShapeView} />
       <Text style={styles.RegText}>Register</Text>
       <Text style={styles.CreateNewAccTxt}>Set your Username and Password</Text>
-      <TextInput style={styles.InputStyle1} placeholder='Enter Username'></TextInput>
-      <TextInput style={styles.InputStyle2} placeholder='Enter Password' secureTextEntry={true}></TextInput>
-      <TouchableOpacity style={styles.Button} onPress={() => navigation.navigate("Login")}>
+      <TextInput style={styles.InputStyle1} placeholder='Enter Username'
+      onChangeText={UName => setUName(UName)}></TextInput>
+      <TextInput style={styles.InputStyle2} placeholder='Enter Password'
+       onChangeText={PWord => setPWord(PWord)} secureTextEntry={true}></TextInput>
+      <TouchableOpacity style={styles.Button} onPress={
+        async () => {
+          try {
+            await user.updateProfile({displayName: UName});
+            await user.updateEmail(UName+"@gmail.com");
+            await user.updatePassword(PWord);
+            console.log(UName);
+            console.log(PWord);
+            console.log(user.displayName);
+            console.log(user.email);
+            fire.auth().signOut();
+            navigation.navigate("Login")
+          } catch (error) {
+            alert('Something Went Wrong');
+          }
+        }}>
         <Text style={styles.ButtonText}>Register</Text></TouchableOpacity>
     </View>
   )

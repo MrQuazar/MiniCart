@@ -12,6 +12,7 @@ import arrow from '../../assets/Arrow.png'
 export default function EnterOTP({ navigation,route }) {
   const [confirm, setConfirm] = React.useState(route.params ?  route.params : []);
   const [OTP,setOTP]=React.useState();
+  
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -46,7 +47,7 @@ export default function EnterOTP({ navigation,route }) {
           try {
             await confirm.confirm(OTP);
             setConfirm(null);
-            alert('Correct');
+            navigation.navigate("FinishRegistration")
           } catch (error) {
             alert('Invalid code');
           }
