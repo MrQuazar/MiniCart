@@ -24,24 +24,20 @@ for (let i = 0; i < Items.length; i++) {
   )
 }*/
 
+/*
+const db = fire.firestore();
+const userRef = db.collection('documents').doc('document_id');
+const ref = db.ref(Items).child('Brustro Paint Brushes, Pack of 5 Assorted Brushes').child('Quantity');
+const increment = fire.firestore.FieldValue.increment(1);
+const decrement = firebase.firestore.FieldValue.increment(-1);
+ref.update({ fieldToDecrease: decrement });
+*/
+
 export default function Cart({ navigation }) {
 
-  const [state] = useState({ productNo: 1, prodPrice: 100, prodName: 'Faber Castell Assorted 20 ml, Pack of 6 colors', totalCost: 200})
+  const [state, setState] = useState({ productNo: 1, prodPrice: 100, prodName: 'Faber Castell Assorted 20 ml, Pack of 6 colors', totalCost: 1, Quantity: 1})
   const [itemsArray, setItemsArray] = React.useState([]);
   const totalItems = itemsArray.length;
-/*
-  const incrementValue = () => {
-    this.setState({
-      productNo: this.state.productNo + 1
-    });
-  }
-
-  const decrementValue = () => {
-    this.setState({
-      productNo: this.state.productNo - 1
-    });
-  }
-  */
 
   React.useEffect(() => {
     fire.database().ref('Items').on('value', snapshot => {
@@ -50,6 +46,7 @@ export default function Cart({ navigation }) {
       setItemsArray(items);
     });
   }, []);
+
 
   console.log(itemsArray)
 
@@ -60,21 +57,26 @@ export default function Cart({ navigation }) {
         {itemsArray.map((item, index) => {
           return (
             <View key={index} style={{maxHeight: 100/896 * windowHeight}}>
+
               <TouchableOpacity style={styles.prod1Style} >
                 <Image source={{uri: item.Image}} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
               
-              <TouchableOpacity style={styles.plusStyle} onPress={() => this.setState({productNo: this.state.productNo + 1})}>
+              <TouchableOpacity style={styles.plusStyle} onPress={() => {
+                item.Quantity = item.Quantity + 1
+                console.log(item.Quantity)}}>
                 <Image source={plusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
               
-              <TouchableOpacity style={styles.minusStyle} onPress={() => this.setState({productNo: this.state.productNo + 1})}>
+              <TouchableOpacity style={styles.minusStyle} onPress={() => {
+                item.Quantity = item.Quantity - 1
+                console.log(item.Quantity)}}>
                 <Image source={minusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
                
               <Text style={styles.itemName}>{item.Name}</Text>
-              <Text style={styles.itemPrice}>₹{item.Price}</Text>
-              <Text style={styles.itemQuantity}>{state.productNo}</Text>
+              <Text style={styles.itemPrice}>₹{item.Price * item.Quantity}</Text>
+              <Text style={styles.itemQuantity}>{item.Quantity}</Text>
             </View>
           );
         })}
