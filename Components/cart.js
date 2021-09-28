@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity,ScrollView } from 'react-native';
 
 import qrScan from './../assets/qrScan.png'
 import prod1 from './../assets/prod1.png'
@@ -16,27 +16,12 @@ const windowHeight = Dimensions.get('window').height;
 
 
 const itemsList = [];
-/*
-for (let i = 0; i < Items.length; i++) {
-  itemsList.push(
-    <Image source={{ uri: Items[i].Image }} />,
-    console.log(Items[i].Image)
-  )
-}*/
-
-/*
-const db = fire.firestore();
-const userRef = db.collection('documents').doc('document_id');
-const ref = db.ref(Items).child('Brustro Paint Brushes, Pack of 5 Assorted Brushes').child('Quantity');
-const increment = fire.firestore.FieldValue.increment(1);
-const decrement = firebase.firestore.FieldValue.increment(-1);
-ref.update({ fieldToDecrease: decrement });
-*/
 
 export default function Cart({ navigation }) {
 
-  const [state, setState] = useState({ productNo: 1, prodPrice: 100, prodName: 'Faber Castell Assorted 20 ml, Pack of 6 colors', totalCost: 1, Quantity: 1})
   const [itemsArray, setItemsArray] = React.useState([]);
+  const [test,setTest] = React.useState()
+  const [totalCost,setTotalCost] = useState(0)
   const totalItems = itemsArray.length;
 
   React.useEffect(() => {
@@ -47,16 +32,34 @@ export default function Cart({ navigation }) {
     });
   }, []);
 
-
+let sum =0
   console.log(itemsArray)
+  for(let item of itemsArray){
+    sum += item.Price * item.Quantity 
+  }
+  console.log(totalCost)
 
   if(!itemsArray){return(<Text>The page is loading</Text>)}
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF', justifyContent: 'center' }}>
-      <View style={styles.itemsList}>
+      <View style={{flex:0.3}}>
+      <TouchableOpacity style={styles.qrScanStyle} onPress={() => navigation.navigate("QR Screen")}>
+        <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+      </TouchableOpacity>
+      
+      <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => navigation.navigate("Order Screen")}>
+        <Text style={{color: "white"}}>Proceed to Buy ({totalItems} items)</Text>
+      </TouchableOpacity>
+      
+      <Text style={styles.totalText}>Total:</Text>
+      <Text style={styles.cartTotal}>₹ {sum}</Text>
+      <TextInput style={styles.InputStyle1} placeholder='Search here'></TextInput>  
+      </View>
+
+      <ScrollView contentContainerStyle={{justifyContent:'space-evenly',flexDirection:"column",flex:1,"width": 414/414 * windowWidth,"height": 0/896 * windowHeight,}} style={{}}>
         {itemsArray.map((item, index) => {
           return (
-            <View key={index} style={{maxHeight: 100/896 * windowHeight}}>
+            <View key={index} style={{Height: 100/896 * windowHeight,margin:20}}>
 
               <TouchableOpacity style={styles.prod1Style} >
                 <Image source={{uri: item.Image}} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
@@ -64,12 +67,14 @@ export default function Cart({ navigation }) {
               
               <TouchableOpacity style={styles.plusStyle} onPress={() => {
                 item.Quantity = item.Quantity + 1
+                setTest(item.Quantity)
                 console.log(item.Quantity)}}>
                 <Image source={plusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
               
               <TouchableOpacity style={styles.minusStyle} onPress={() => {
                 item.Quantity = item.Quantity - 1
+                setTest(item.Quantity)
                 console.log(item.Quantity)}}>
                 <Image source={minusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
@@ -80,18 +85,7 @@ export default function Cart({ navigation }) {
             </View>
           );
         })}
-      </View>
-      <TouchableOpacity style={styles.qrScanStyle} onPress={() => navigation.navigate("QR Screen")}>
-        <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => navigation.navigate("Order Screen")}>
-        <Text style={{color: "white"}}>Proceed to Buy ({totalItems} items)</Text>
-      </TouchableOpacity>
-      <Text style={styles.totalText}>Total:</Text>
-      <Text style={styles.cartTotal}>₹ {state.totalCost}</Text>
-      <TextInput style={styles.InputStyle1} placeholder='Search here'></TextInput>
-
-
+      </ScrollView>
     </View>
     
   )
@@ -120,10 +114,9 @@ const styles = StyleSheet.create({
   },
   
   itemsList: {
-    flex: 0.6,
+    flex: 1,
     position: "relative",
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
+    flexDirection: 'row',
     "width": 414/414 * windowWidth,
     "height": 0/896 * windowHeight,
     "left": 0/414 * windowWidth,
