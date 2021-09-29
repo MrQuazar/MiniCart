@@ -12,7 +12,7 @@ const windowHeight = Dimensions.get('window').height;
 export default function QRScreen({ navigation }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
-    const [qrCode, setqrCode] = useState("RM2");
+    const [qrCode, setqrCode] = useState("RM0");
     const [itemsArray, setItemsArray] = React.useState([]);
     const [savedItems, setSavedItems] = React.useState([]);
 
