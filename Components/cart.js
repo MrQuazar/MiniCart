@@ -33,23 +33,6 @@ export default function Cart({ navigation }) {
     });
   }, []);
 
-  // const handleRemoveItem = (e) => {
-  //   const name = e.target.getAttribute(itemsArray)
-  //    updateList(list.filter(item => item.name !== name))
-  //    console.log("button is preesed")
-  //   }
-
-// for(let data of itemsArray){
-//   const Name = data.Name
-//   function handleRemoveItem(Name){
-//     for(let i = 0; i < itemsArray.length; i++){
-//       if(itemsArray[i].Name === Name){
-//         itemsArray.splice[i, 1]
-//         return
-//       }
-//     }
-//   } }
-
 let sum =0
   console.log(itemsArray)
   for(let item of itemsArray){
