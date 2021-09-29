@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity,ScrollView } from 'react-native';
+import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity,ScrollView, Alert } from 'react-native';
 
 import qrScan from './../assets/qrScan.png'
 import prod1 from './../assets/prod1.png'
@@ -21,6 +21,7 @@ export default function Cart({ navigation }) {
 
   const [itemsArray, setItemsArray] = React.useState([]);
   const [test,setTest] = React.useState()
+  // const [list, updateList] = useState(itemsArray);
   const [totalCost,setTotalCost] = useState(0)
   const totalItems = itemsArray.length;
 
@@ -32,12 +33,39 @@ export default function Cart({ navigation }) {
     });
   }, []);
 
+  // const handleRemoveItem = (e) => {
+  //   const name = e.target.getAttribute(itemsArray)
+  //    updateList(list.filter(item => item.name !== name))
+  //    console.log("button is preesed")
+  //   }
+
+// for(let data of itemsArray){
+//   const Name = data.Name
+//   function handleRemoveItem(Name){
+//     for(let i = 0; i < itemsArray.length; i++){
+//       if(itemsArray[i].Name === Name){
+//         itemsArray.splice[i, 1]
+//         return
+//       }
+//     }
+//   } }
+
 let sum =0
   console.log(itemsArray)
   for(let item of itemsArray){
     sum += item.Price * item.Quantity 
   }
   console.log(totalCost)
+
+// Remove items  
+
+// function handleRemoveItem(index){ 
+//       console.log(index)
+//       console.log(itemsArray)
+//       itemsArray.splice[index, 1]
+//       setTest(index)
+           
+//  }  
 
   if(!itemsArray){return(<Text>The page is loading</Text>)}
   return (
@@ -68,14 +96,40 @@ let sum =0
               <TouchableOpacity style={styles.plusStyle} onPress={() => {
                 item.Quantity = item.Quantity + 1
                 setTest(item.Quantity)
-                console.log(item.Quantity)}}>
+               /* console.log(item.Quantity)*/}}>
                 <Image source={plusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
               
               <TouchableOpacity style={styles.minusStyle} onPress={() => {
+                if(item.Quantity === 1){
+                  Alert.alert(
+                    "Alert",
+                    "Do You Want to Remove This Item",
+                    [
+                      {
+                        text: "NO",
+                        onPress: () => console.log("Cancel Pressed"),
+                        
+                      },
+                      { text: "YES", 
+                      onPress: () => {                    
+                          itemsArray.splice(index, 1)
+                          console.log(index)
+                          console.log(itemsArray)
+                          setTest(index) 
+                      }
+                    }
+                    ],
+                    
+                  );
+
+
+                }
+
+                else{
                 item.Quantity = item.Quantity - 1
                 setTest(item.Quantity)
-                console.log(item.Quantity)}}>
+                /*console.log(item.Quantity)*/}}}>
                 <Image source={minusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
                
