@@ -1,81 +1,121 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
+import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity,ScrollView, Alert } from 'react-native';
 
 import qrScan from './../assets/qrScan.png'
-import prod1 from './../assets/prod1.png'
 import minusbtn from './../assets/minusbtn.png'
 import plusbtn from './../assets/plusbtn.png'
-import divider from './../assets/divider.png'
 import { Dimensions } from 'react-native';
 
 import fire from './firebase';
 import 'firebase/database'
-import { render } from 'react-dom';
+
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function Cart({ route, navigation }) {
 
-  const [state, setState] = useState({ productNo: 2, prodPrice: 100, prodName: 'Faber Castell Assorted 20 ml, Pack of 6 colors', totalCost: 200 })
+const itemsList = [];
+
+export default function Cart({ navigation ,route }) {
+
   const [QRarray, setQRarray] = React.useState(route.params ? route.params : []);
-  const [newItemsArray, setNewItemsArray] = useState([]);
+  const [itemsArray, setItemsArray] = React.useState([]);
+  const [flag, setFlag] = React.useState(0);
+  const [test,setTest] = React.useState();
+  if(flag===0){
   for (let i = 0; i < QRarray.length; i++) {
     fire.database().ref('Items').orderByChild("ItemId").equalTo(QRarray[i]).on('value', snapshot => {
 
       let data = snapshot.val();
       const items = Object.values(data);
-      newItemsArray.push(items[0]);
+      itemsArray.push(items[0]);
     });
   }
+  setFlag(1);
+}
+  const [totalCost,setTotalCost] = useState(0)
+  const totalItems = itemsArray.length;
 
-  console.log(QRarray)
-  console.log(newItemsArray)
-  const totalItems = newItemsArray.length;
+let sum =0
+  for(let item of itemsArray){
+    sum += item.Price * item.Quantity 
+  }
 
-  if (!newItemsArray) { return (<Text>The page is loading</Text>) }
+  if(!itemsArray){return(<Text>The page is loading</Text>)}
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF', justifyContent: 'center' }}>
-      <View style={styles.itemsList}>
-        {newItemsArray.map((item, index) => {
-          return (
-            <View key={index} style={{ maxHeight: 100 / 896 * windowHeight }}>
-              <TouchableOpacity style={styles.prod1Style} >
-                <Image source={{ uri: item.Image }} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.plusStyle}>
-                <Image source={plusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.minusStyle}>
-                <Image source={minusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-              </TouchableOpacity>
-
-              <Text style={styles.itemName}>{item.Name}</Text>
-              <Text style={styles.itemPrice}>₹{item.Price}</Text>
-              <Text style={styles.itemQuantity}>{state.productNo}</Text>
-            </View>
-          );
-        })}
-      </View>
+      <View style={{flex:0.3}}>
       <TouchableOpacity style={styles.qrScanStyle} onPress={() => navigation.navigate("QR Screen")}>
         <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
       </TouchableOpacity>
+      
       <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => navigation.navigate("Order Screen")}>
-        <Text style={{ color: "white" }}>Proceed to Buy ({totalItems} items)</Text>
+        <Text style={{color: "white"}}>Proceed to Buy ({totalItems} items)</Text>
       </TouchableOpacity>
+      
       <Text style={styles.totalText}>Total:</Text>
-      <Text style={styles.cartTotal}>₹ {state.totalCost}</Text>
-      <TextInput style={styles.InputStyle1} placeholder='Search here'></TextInput>
+      <Text style={styles.cartTotal}>₹ {sum}</Text>
+      <TextInput style={styles.InputStyle1} placeholder='Search here'></TextInput>  
+      </View>
+
+      <ScrollView contentContainerStyle={{justifyContent:'space-evenly',flexDirection:"column",flex:1,"width": 414/414 * windowWidth,"height": 0/896 * windowHeight,}} style={{}}>
+        {itemsArray.map((item, index) => {
+          return (
+            <View key={index} style={{Height: 100/896 * windowHeight,margin:20}}>
+
+              <TouchableOpacity style={styles.prod1Style} >
+                <Image source={{uri: item.Image}} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+              </TouchableOpacity>
+              
+              <TouchableOpacity style={styles.plusStyle} onPress={() => {
+                item.Quantity = item.Quantity + 1
+                setTest(item.Quantity)}}>
+                <Image source={plusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+              </TouchableOpacity>
+              
+              <TouchableOpacity style={styles.minusStyle} onPress={() => {
+                if(item.Quantity === 1){
+                  Alert.alert(
+                    "Alert",
+                    "Do You Want to Remove This Item",
+                    [
+                      {
+                        text: "NO",
+                        onPress: () => console.log("Cancel Pressed"),
+                        
+                      },
+                      { text: "YES", 
+                      onPress: () => {                    
+                          itemsArray.splice(index, 1)
+                          console.log(index)
+                          console.log(itemsArray)
+                          setTest(index) 
+                      }
+                    }
+                    ],
+                    
+                  );
 
 
+                }
+
+                else{
+                item.Quantity = item.Quantity - 1
+                setTest(item.Quantity)}}}>
+                <Image source={minusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+              </TouchableOpacity>
+               
+              <Text style={styles.itemName}>{item.Name}</Text>
+              <Text style={styles.itemPrice}>₹{item.Price * item.Quantity}</Text>
+              <Text style={styles.itemQuantity}>{item.Quantity}</Text>
+            </View>
+          );
+        })}
+      </ScrollView>
     </View>
+    
   )
 }
-/*
-            
-*/
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -95,56 +135,55 @@ const styles = StyleSheet.create({
     "width": windowWidth,
     "height": windowHeight
   },
-
+  
   itemsList: {
-    flex: 0.6,
+    flex: 1,
     position: "relative",
-    flexDirection: 'column',
-    justifyContent: 'space-evenly',
-    "width": 414 / 414 * windowWidth,
-    "height": 0 / 896 * windowHeight,
-    "left": 0 / 414 * windowWidth,
-    "top": -100 / 896 * windowHeight,
+    flexDirection: 'row',
+    "width": 414/414 * windowWidth,
+    "height": 0/896 * windowHeight,
+    "left": 0/414 * windowWidth,
+    "top": -100/896 * windowHeight,
   },
-
+  
   dividerStyle: {
     "position": "absolute",
-    "width": 800 / 414 * windowWidth,
-    "height": 1 / 896 * windowHeight,
-    "left": -200 / 414 * windowWidth,
-    "top": 1 / 896 * windowHeight,
+    "width": 800/414 * windowWidth,
+    "height": 1/896 * windowHeight,
+    "left": -200/414 * windowWidth,
+    "top": 1/896 * windowHeight,
   },
 
   qrScanStyle: {
     "position": "absolute",
     "width": 0.09 * windowWidth,
     "height": 0.05 * windowHeight,
-    "right": 26 / 414 * windowWidth,
-    "top": 50 / 896 * windowHeight
+    "right": 26/414 * windowWidth,
+    "top": 50/896 * windowHeight
   },
 
   prod1Style: {
     "position": "absolute",
     "width": 0.246377 * windowWidth,
     "height": 0.10379 * windowHeight,
-    "left": 22 / 414 * windowWidth,
-    "top": 18 / 896 * windowHeight,
+    "left": 22/414 * windowWidth,
+    "top": 18/896 * windowHeight,
   },
 
   minusStyle: {
     "position": "absolute",
     "width": 0.08454 * windowWidth,
     "height": 0.04241 * windowHeight,
-    "right": 26 / 414 * windowWidth,
-    "top": 84 / 896 * windowHeight,
+    "right": 26/414 * windowWidth,
+    "top": 84/896 * windowHeight,
   },
 
   plusStyle: {
     "position": "absolute",
     "width": 0.08454 * windowWidth,
     "height": 0.04241 * windowHeight,
-    "right": 122 / 414 * windowWidth,
-    "top": 84 / 896 * windowHeight,
+    "right": 122/414 * windowWidth,
+    "top": 84/896 * windowHeight,
   },
 
   buyBtnStyle: {
@@ -166,8 +205,8 @@ const styles = StyleSheet.create({
   totalText:
   {
     position: "absolute",
-    "width": 93 / 414 * windowWidth,
-    "height": 38 / 896 * windowHeight,
+    "width": 93/414 * windowWidth,
+    "height": 38/896 * windowHeight,
     "left": 0.0531 * windowWidth,
     "top": 0.21875 * windowHeight,
     fontFamily: "Roboto",
@@ -180,8 +219,8 @@ const styles = StyleSheet.create({
 
   cartTotal: {
     position: "absolute",
-    "height": 58 / 896 * windowHeight,
-    "right": 30 / 414 * windowWidth,
+    "height": 58/896 * windowHeight,
+    "right": 30/414 * windowWidth,
     "top": 0.21875 * windowHeight,
 
     fontStyle: "normal",
@@ -193,10 +232,10 @@ const styles = StyleSheet.create({
 
   itemName: {
     position: "absolute",
-    "width": 240 / 414 * windowWidth,
-    "height": 38 / 896 * windowHeight,
-    "left": 134 / 414 * windowWidth,
-    "top": 18 / 896 * windowHeight,
+    "width": 240/414 * windowWidth,
+    "height": 38/896 * windowHeight,
+    "left": 134/414 * windowWidth,
+    "top": 18/896 * windowHeight,
     textAlign: 'left',
 
 
@@ -210,7 +249,7 @@ const styles = StyleSheet.create({
   itemPrice: {
     position: "absolute",
     "left": 0.32 * windowWidth,
-    "top": 73 / 896 * windowHeight,
+    "top": 73/896 * windowHeight,
     textAlign: 'center',
 
     fontStyle: "normal",
@@ -222,10 +261,10 @@ const styles = StyleSheet.create({
 
   itemQuantity: {
     position: "absolute",
-    "width": 15 / 414 * windowWidth,
-    "height": 38 / 896 * windowHeight,
-    "right": 84 / 414 * windowWidth,
-    "top": 84 / 896 * windowHeight,
+    "width": 15/414 * windowWidth,
+    "height": 38/896 * windowHeight,
+    "right": 84/414 * windowWidth,
+    "top": 84/896 * windowHeight,
     textAlign: 'center',
 
 
@@ -241,8 +280,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     "width": 0.7101449275362319 * windowWidth,
     "height": 0.0357142857142857 * windowHeight,
-    "left": 15 / 414 * windowWidth,
-    "top": 50 / 896 * windowHeight,
+    "left": 15/414 * windowWidth,
+    "top": 50/896 * windowHeight,
     paddingLeft: 10,
     backgroundColor: "#FFFFFF",
     shadowColor: '#000',
