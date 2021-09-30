@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity,ScrollView, Alert } from 'react-native';
+import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, ScrollView, Alert, FlatList } from 'react-native';
 
 import qrScan from './../assets/qrScan.png'
 import prod1 from './../assets/prod1.png'
@@ -13,7 +13,6 @@ import { render } from 'react-dom';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-
 
 const itemsList = [];
 
@@ -52,8 +51,8 @@ let sum =0
 
   if(!itemsArray){return(<Text>The page is loading</Text>)}
   return (
-    <View style={{ flex: 1, backgroundColor: '#FFFFFF', justifyContent: 'center' }}>
-      <View style={{flex:0.3}}>
+    <View style={{ flex: 1, backgroundColor: '#FFFFFF'}}>
+      <View style={{flex:0.5}}>
       <TouchableOpacity style={styles.qrScanStyle} onPress={() => navigation.navigate("QR Screen")}>
         <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
       </TouchableOpacity>
@@ -67,10 +66,10 @@ let sum =0
       <TextInput style={styles.InputStyle1} placeholder='Search here'></TextInput>  
       </View>
 
-      <ScrollView contentContainerStyle={{justifyContent:'space-evenly',flexDirection:"column",flex:1,"width": 414/414 * windowWidth,"height": 0/896 * windowHeight,}} style={{}}>
+      <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 414/414 * windowWidth, "height": 600/896 * windowHeight, "left": -10/414 * windowWidth, "top":120/896 * windowHeight}}>
         {itemsArray.map((item, index) => {
           return (
-            <View key={index} style={{Height: 100/896 * windowHeight,margin:20}}>
+            <View key={index} style={{flex: 1, "width": 414/414 * windowWidth, Height: 1000/896 * windowHeight,"top": -90/896 * windowHeight, marginVertical:60}}>
 
               <TouchableOpacity style={styles.prod1Style} >
                 <Image source={{uri: item.Image}} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
@@ -127,9 +126,8 @@ let sum =0
     
   )
 }
-/*
-            
-*/
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -219,8 +217,6 @@ const styles = StyleSheet.create({
   totalText:
   {
     position: "absolute",
-    "width": 93/414 * windowWidth,
-    "height": 38/896 * windowHeight,
     "left": 0.0531 * windowWidth,
     "top": 0.21875 * windowHeight,
     fontFamily: "Roboto",
@@ -246,8 +242,7 @@ const styles = StyleSheet.create({
 
   itemName: {
     position: "absolute",
-    "width": 240/414 * windowWidth,
-    "height": 38/896 * windowHeight,
+    "width": 250/414 * windowWidth,
     "left": 134/414 * windowWidth,
     "top": 18/896 * windowHeight,
     textAlign: 'left',
@@ -263,7 +258,7 @@ const styles = StyleSheet.create({
   itemPrice: {
     position: "absolute",
     "left": 0.32 * windowWidth,
-    "top": 73/896 * windowHeight,
+    "top": 75/896 * windowHeight,
     textAlign: 'center',
 
     fontStyle: "normal",
@@ -275,8 +270,6 @@ const styles = StyleSheet.create({
 
   itemQuantity: {
     position: "absolute",
-    "width": 15/414 * windowWidth,
-    "height": 38/896 * windowHeight,
     "right": 84/414 * windowWidth,
     "top": 84/896 * windowHeight,
     textAlign: 'center',
