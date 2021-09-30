@@ -12,7 +12,7 @@ const windowHeight = Dimensions.get('window').height;
 export default function QRScreen({ navigation }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
-    const [qrCode, setqrCode] = useState("RM0");
+    const [qrCode, setqrCode] = useState({Code:"RM4",Quant:1});
     const [itemsArray, setItemsArray] = React.useState([]);
     const [savedItems, setSavedItems] = React.useState([]);
 
@@ -29,17 +29,17 @@ export default function QRScreen({ navigation }) {
 
     const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
-        setqrCode(data);
-        fire.database().ref('Items').orderByChild("ItemId").equalTo(qrCode).on('value', snapshot => {
+        setqrCode({Code: data,Quant:1})
+        fire.database().ref('Items').orderByChild("ItemId").equalTo(qrCode.Code).on('value', snapshot => {
             let data = snapshot.val();
             const items = Object.values(data);
             setItemsArray(items);
         });
-        console.log('Type: ' + type + '\nData: ' + data)
+        console.log('Line 38 '+ JSON.stringify(qrCode))
     };
 
     React.useEffect(() => {
-        fire.database().ref('Items').orderByChild("ItemId").equalTo(qrCode).on('value', snapshot => {
+        fire.database().ref('Items').orderByChild("ItemId").equalTo(qrCode.Code).on('value', snapshot => {
             let data = snapshot.val();
             const items = Object.values(data);
             setItemsArray(items);
@@ -57,9 +57,10 @@ export default function QRScreen({ navigation }) {
     }
     function Adder() {
         setScanned(false);
-        console.log(itemsArray);
-        savedItems.push(itemsArray[0].ItemId);
-        console.log(savedItems)
+        console.log('Line 61 ' + JSON.stringify(itemsArray));
+        if(itemsArray[0]){
+        savedItems.push({Code : itemsArray[0].ItemId,Quant: 1});}
+        console.log('Line 63 ' + JSON.stringify(savedItems))
         setItemsArray([{ "Name": "", "Price": "" }]);
         //adds item for list page;
     }

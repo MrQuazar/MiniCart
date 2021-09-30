@@ -22,9 +22,10 @@ export default function Cart({ navigation ,route }) {
   const [itemsArray, setItemsArray] = React.useState([]);
   const [flag, setFlag] = React.useState(0);
   const [test,setTest] = React.useState();
+  console.log(JSON.stringify(QRarray))
   if(flag===0){
   for (let i = 0; i < QRarray.length; i++) {
-    fire.database().ref('Items').orderByChild("ItemId").equalTo(QRarray[i]).on('value', snapshot => {
+    fire.database().ref('Items').orderByChild("ItemId").equalTo(QRarray[i].Code).on('value', snapshot => {
 
       let data = snapshot.val();
       const items = Object.values(data);
@@ -36,9 +37,10 @@ export default function Cart({ navigation ,route }) {
   const [totalCost,setTotalCost] = useState(0)
   const totalItems = itemsArray.length;
 
-let sum =0
+let sum =0,i=0
   for(let item of itemsArray){
-    sum += item.Price * item.Quantity 
+    sum += item.Price * QRarray[i].Quant 
+    i++
   }
 
   if(!itemsArray){return(<Text>The page is loading</Text>)}
@@ -68,14 +70,14 @@ let sum =0
               </TouchableOpacity>
               
               <TouchableOpacity style={styles.plusStyle} onPress={() => {
-                item.Quantity = item.Quantity + 1
-                setTest(item.Quantity)
+                QRarray[index].Quant = QRarray[index].Quant + 1
+                setTest(QRarray[index].Quant)
                /* console.log(item.Quantity)*/}}>
                 <Image source={plusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
               
               <TouchableOpacity style={styles.minusStyle} onPress={() => {
-                if(item.Quantity === 1){
+                if(QRarray[index].Quant === 1){
                   Alert.alert(
                     "Alert",
                     "Do You Want to Remove This Item",
@@ -88,6 +90,7 @@ let sum =0
                       { text: "YES", 
                       onPress: () => {                    
                           itemsArray.splice(index, 1)
+                          QRarray.splice(index,1)
                           console.log(index)
                           console.log(itemsArray)
                           setTest(index) 
@@ -101,15 +104,15 @@ let sum =0
                 }
 
                 else{
-                item.Quantity = item.Quantity - 1
-                setTest(item.Quantity)
+                  QRarray[index].Quant = QRarray[index].Quant - 1
+                setTest(QRarray[index].Quant)
                 /*console.log(item.Quantity)*/}}}>
                 <Image source={minusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
                
               <Text style={styles.itemName}>{item.Name}</Text>
-              <Text style={styles.itemPrice}>₹{item.Price * item.Quantity}</Text>
-              <Text style={styles.itemQuantity}>{item.Quantity}</Text>
+              <Text style={styles.itemPrice}>₹{item.Price * QRarray[index].Quant}</Text>
+              <Text style={styles.itemQuantity}>{QRarray[index].Quant}</Text>
             </View>
           );
         })}
@@ -236,7 +239,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     "width": 250/414 * windowWidth,
     "left": 134/414 * windowWidth,
-    "top": 18/896 * windowHeight,
+    "top": 24/896 * windowHeight,
     textAlign: 'left',
 
 
