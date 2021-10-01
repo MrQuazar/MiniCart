@@ -23,7 +23,7 @@ export default function RegisterMobile({ navigation }) {
     !firebaseConfig || Platform.OS === 'web'
       ? {
         text:
-          'To get started, provide a valid firebase config in App.js and open this snack on an iOS or Android device.',
+          'open this app on an iOS or Android device, it will not work on web',
       }
       : undefined
   );
@@ -82,7 +82,7 @@ export default function RegisterMobile({ navigation }) {
           // passed directly to `verifyPhoneNumber`.
           console.log(phoneNumber);
           const confirmation = await  fire.auth().signInWithPhoneNumber(
-            phoneNumber,
+            "+91 "+phoneNumber,
             recaptchaVerifier.current
           );
           setConfirm(confirmation);
