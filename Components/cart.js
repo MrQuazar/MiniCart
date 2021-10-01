@@ -47,7 +47,7 @@ let sum =0,i=0
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF'}}>
       <View style={{flex:0.5}}>
-      <TouchableOpacity style={styles.qrScanStyle} onPress={() => navigation.navigate("QR Screen")}>
+      <TouchableOpacity style={styles.qrScanStyle} onPress={() => {navigation.navigate("QR Screen")}}>
         <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
       </TouchableOpacity>
       
