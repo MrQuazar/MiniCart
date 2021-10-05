@@ -22,6 +22,7 @@ export default function Cart({ navigation ,route }) {
   const [itemsArray, setItemsArray] = React.useState([]);
   const [flag, setFlag] = React.useState(0);
   const [test,setTest] = React.useState();
+  const [orderNo,setOrderNo] = React.useState();
   console.log(JSON.stringify(QRarray))
   if(flag===0){
   for (let i = 0; i < QRarray.length; i++) {
@@ -43,6 +44,13 @@ let sum =0,i=0
     i++
   }
 
+function totalOrders(){
+  fire.database().ref('TotalOrders').transaction((current_value) => {
+    setOrderNo((current_value || 0) + 1);
+    return (current_value || 0) + 1;
+});
+}
+
   if(!itemsArray){return(<Text>The page is loading</Text>)}
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF'}}>
@@ -51,7 +59,16 @@ let sum =0,i=0
         <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
       </TouchableOpacity>
       
-      <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => navigation.navigate("Order Screen")}>
+      <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => 
+        {
+          totalOrders();
+          console.log(orderNo)
+          fire.database().ref('Orders').push().set({
+            OrderNo: orderNo,
+            QRArray: QRarray,
+            Status:'B'
+          });
+          navigation.navigate("Order Screen",orderNo)}}>
         <Text style={{color: "white"}}>Proceed to Buy ({totalItems} items)</Text>
       </TouchableOpacity>
       
