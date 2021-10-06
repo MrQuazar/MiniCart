@@ -41,10 +41,7 @@ export default function QRScreen({ navigation }) {
 
 
     //assign values to display
-    function shouldScan() {
-        alert('Camera on');
-        //scan and display values;
-    }
+   
     function toCart() {
         navigation.navigate("cart", savedItems);
         //scan and display values;
@@ -83,6 +80,7 @@ export default function QRScreen({ navigation }) {
             </View>)
     }
     return (
+        <ImageBackground source={require('../assets/cartbackground.png')} style={styles.bgimage} >
         <View style={styles.container}>
             <View >
                 <BarCodeScanner
@@ -92,8 +90,8 @@ export default function QRScreen({ navigation }) {
             <TouchableOpacity style={styles.ToCart} onPress={() => { toCart() }}>
                 <Image source={require('../assets/ToCart.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.ScanBtn} onPress={() => { shouldScan() }}>
-                <Image source={require('../assets/ScanBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+            <TouchableOpacity style={styles.logoutbtn}>
+                <Image source={require('../assets/logoutbtn.png')} style={{resizeMode: 'contain', width: '100%', height: '100%'}} />
             </TouchableOpacity>
             <View>
                 {itemsArray.map((item, index) => {
@@ -112,9 +110,23 @@ export default function QRScreen({ navigation }) {
                 <Image source={require('../assets/CancelBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
         </View>
+        </ImageBackground>
     );
 }
 const styles = StyleSheet.create({
+    bgimage: {
+        position: "relative",
+        resizeMode:'contain',
+        "width": windowWidth,
+        "height": windowHeight
+      },
+    logoutbtn: {
+        "position": "absolute",
+        "width": 55/414 * windowWidth,
+        "height": 56/896 * windowHeight,
+        "left": 19/414 * windowWidth,
+        "top": 38/896 * windowHeight
+      },  
     container: {
         "position": "relative",
         "width": windowWidth,

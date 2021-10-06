@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity,ScrollView, Alert } from 'react-native';
+import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity,ScrollView, Alert, ImageBackground } from 'react-native';
 
 import qrScan from './../assets/qrScan.png'
 import minusbtn from './../assets/minusbtn.png'
@@ -45,7 +45,8 @@ let sum =0,i=0
 
   if(!itemsArray){return(<Text>The page is loading</Text>)}
   return (
-    <View style={{ flex: 1, backgroundColor: '#FFFFFF'}}>
+    <ImageBackground source={require('../assets/cartbackground.png')} style={styles.bgimage} >
+    <View style={{ flex: 1}}>
       <View style={{flex:0.5}}>
       <TouchableOpacity style={styles.qrScanStyle} onPress={() => {navigation.navigate("QR Screen")}}>
         <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
@@ -118,12 +119,18 @@ let sum =0,i=0
         })}
       </ScrollView>
     </View>
-    
+    </ImageBackground>
   )
 }
 
 
 const styles = StyleSheet.create({
+  bgimage: {
+    position: "relative",
+    resizeMode:'contain',
+    "width": windowWidth,
+    "height": windowHeight
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',

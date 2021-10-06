@@ -13,56 +13,66 @@ export default function Order({ navigation }) {
         //send order no to admin side;
     }
     return (
+        <ImageBackground source={require('../assets/orderbackground.png')} style={styles.bgimage} >
         <View style={styles.container}>
+            <Image source={require('../assets/info.png')} style={styles.infoStyle} />    
             <Text style={styles.OrderNumber}>Order Number:</Text>
             <View style={styles.NumbDisplay}>
                 <Text style={styles.CodeStyle} >{state.orderNo}</Text>
             </View>
-            <TouchableOpacity style={styles.Button1Style}
-                onPress={() => { ordrPlaced() }}>
-                <Image source={require('./../assets/OdrBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-            </TouchableOpacity>
+            
             <TouchableOpacity style={styles.Button2Style}
                 onPress={() => { navigation.navigate("ThankyouPage") }} >
                 <Image source={require('./../assets/ReceivedBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
         </View>
+        </ImageBackground>
     );
 }
 const styles = StyleSheet.create({
+    bgimage: {
+        position: "relative",
+        resizeMode:'contain',
+        "width": windowWidth,
+        "height": windowHeight
+      },  
     container: {
         "position": "relative",
         "width": windowWidth,
         "height": windowHeight,
     },
+    infoStyle:{
+        "position": "absolute",
+        "width": 369/414 * windowWidth,
+        "height": 88/896 * windowHeight,
+        "left": 22/414 * windowWidth,
+        "top": 92/896 * windowHeight
+    },    
     OrderNumber: {
-        position: "absolute",
-        left: 0.178 * windowWidth,
-        top: 0.237 * windowHeight,
-        fontStyle: "normal",
-        fontWeight: "normal",
-        fontSize: 20,
-        lineHeight: 25
+        "position": "absolute",
+        "width": 164/414 * windowWidth,
+        "height": 25/896 * windowHeight,
+        "left": 74/414 * windowWidth,
+        "top": 300/896 * windowHeight,
+        "fontStyle": "normal",
+        "fontWeight": "normal",
+        "fontSize": 20,
+         color:'white',
+        "lineHeight": 25
+        
     },
     NumbDisplay: {
         position: "absolute",
         width: 0.644 * windowWidth,
         height: 0.266 * windowHeight,
         left: 0.178 * windowWidth,
-        top: 0.304 * windowHeight,
-        backgroundColor: "#FFFFFF",
+        top: 0.4 * windowHeight,
+        backgroundColor: "#06F401",
         borderWidth: 1,
         borderColor: "#000000",
         borderStyle: "solid",
         borderRadius: 25,
         alignItems: "center"
-    },
-    Button1Style: {
-        position: "absolute",
-        width: 0.429 * windowWidth,
-        height: 0.072 * windowHeight,
-        left: 0.285 * windowWidth,
-        top: 0.646 * windowHeight,
     },
     Button2Style: {
         position: "absolute",
