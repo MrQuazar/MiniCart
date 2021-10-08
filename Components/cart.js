@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, ScrollView, Alert, FlatList } from 'react-native';
+import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity, ScrollView, Alert } from 'react-native';
 
 import qrScan from './../assets/qrScan.png'
 import prod1 from './../assets/prod1.png'
@@ -17,6 +17,12 @@ const windowHeight = Dimensions.get('window').height;
 const itemsList = [];
 
 export default function Cart({ navigation }) {
+  const [state, setState] = useState({
+    search: '',
+  })
+
+  const [textInputValue, setTextInputValue] = React.useState('');
+  const [value, onChangeText] = React.useState('Useless Placeholder');
 
   const [itemsArray, setItemsArray] = React.useState([]);
   const [test,setTest] = React.useState()
@@ -25,6 +31,7 @@ export default function Cart({ navigation }) {
   const totalItems = itemsArray.length;
 
   React.useEffect(() => {
+    let isMounted = true;
     fire.database().ref('Items').on('value', snapshot => {
       let data = snapshot.val();
       const items = Object.values(data);
@@ -49,6 +56,16 @@ let sum =0
            
 //  }  
 
+/*
+filterList(itemsArray) {
+  return itemsArray.filter(
+    (listItem) =>
+      listItem.itemName
+        .toLowerCase()
+        .includes(state.search.toLowerCase())
+  );
+} */
+
   if(!itemsArray){return(<Text>The page is loading</Text>)}
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF'}}>
@@ -63,11 +80,18 @@ let sum =0
       
       <Text style={styles.totalText}>Total:</Text>
       <Text style={styles.cartTotal}>₹ {sum}</Text>
-      <TextInput style={styles.InputStyle1} placeholder='Search here'></TextInput>  
+      <TextInput 
+      style={styles.InputStyle1} 
+      placeholder='Search here'
+      onChangeText={(text) => setTextInputValue(text)}
+      value={textInputValue}
+      >
+      </TextInput>  
       </View>
 
       <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 414/414 * windowWidth, "height": 600/896 * windowHeight, "left": -10/414 * windowWidth, "top":120/896 * windowHeight}}>
         {itemsArray.map((item, index) => {
+          if(item.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
           return (
             <View key={index} style={{flex: 1, "width": 414/414 * windowWidth, Height: 1000/896 * windowHeight,"top": -90/896 * windowHeight, marginVertical:60}}>
 
@@ -120,7 +144,10 @@ let sum =0
               <Text style={styles.itemQuantity}>{item.Quantity}</Text>
             </View>
           );
-        })}
+ }
+ else{
+   console.log("nothing")
+ } })}
       </ScrollView>
     </View>
     
