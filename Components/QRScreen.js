@@ -13,7 +13,7 @@ export default function QRScreen({ navigation }) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
     const [qrCode, setqrCode] = useState({Code:"RM4",Quant:1});
-    const [itemsArray, setItemsArray] = React.useState([]);
+    const [itemsArray, setItemsArray] = React.useState([{ItemId:"RM",Name: "Please scan an item",Price:"Not Applicable"}]);
     const [savedItems, setSavedItems] = React.useState([]);
 
     const askForCameraPermission = () => {
@@ -27,8 +27,8 @@ export default function QRScreen({ navigation }) {
         askForCameraPermission();
     }, []);
 
+    //TODO: Improve Scanning
     const handleBarCodeScanned = ({ type, data }) => {
-        setScanned(true);
         setqrCode({Code: data,Quant:1})
         fire.database().ref('Items').orderByChild("ItemId").equalTo(qrCode.Code).on('value', snapshot => {
             let data = snapshot.val();
@@ -38,19 +38,10 @@ export default function QRScreen({ navigation }) {
         console.log('Line 38 '+ JSON.stringify(qrCode))
     };
 
-    React.useEffect(() => {
-        fire.database().ref('Items').orderByChild("ItemId").equalTo(qrCode.Code).on('value', snapshot => {
-            let data = snapshot.val();
-            const items = Object.values(data);
-            setItemsArray(items);
-        });
-    }, []);
+
 
     //assign values to display
-    function shouldScan() {
-        alert('Camera on');
-        //scan and display values;
-    }
+   
     function toCart() {
         navigation.navigate("cart", savedItems);
         //scan and display values;
@@ -58,8 +49,14 @@ export default function QRScreen({ navigation }) {
     function Adder() {
         setScanned(false);
         console.log('Line 61 ' + JSON.stringify(itemsArray));
-        if(itemsArray[0]){
-        savedItems.push({Code : itemsArray[0].ItemId,Quant: 1});}
+        if(itemsArray[0].ItemId){
+            if(savedItems.some(item => item.Code === itemsArray[0].ItemId)){
+                alert("Item already exists in the cart!")
+            }
+            else{
+                savedItems.push({Code : itemsArray[0].ItemId,Quant: 1});}
+            }
+        
         console.log('Line 63 ' + JSON.stringify(savedItems))
         setItemsArray([{ "Name": "", "Price": "" }]);
         //adds item for list page;
@@ -83,6 +80,7 @@ export default function QRScreen({ navigation }) {
             </View>)
     }
     return (
+        <ImageBackground source={require('../assets/cartbackground.png')} style={styles.bgimage} >
         <View style={styles.container}>
             <View >
                 <BarCodeScanner
@@ -92,8 +90,8 @@ export default function QRScreen({ navigation }) {
             <TouchableOpacity style={styles.ToCart} onPress={() => { toCart() }}>
                 <Image source={require('../assets/ToCart.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.ScanBtn} onPress={() => { shouldScan() }}>
-                <Image source={require('../assets/ScanBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+            <TouchableOpacity style={styles.logoutbtn}>
+                <Image source={require('../assets/logoutbtn.png')} style={{resizeMode: 'contain', width: '100%', height: '100%'}} />
             </TouchableOpacity>
             <View>
                 {itemsArray.map((item, index) => {
@@ -112,9 +110,23 @@ export default function QRScreen({ navigation }) {
                 <Image source={require('../assets/CancelBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
         </View>
+        </ImageBackground>
     );
 }
 const styles = StyleSheet.create({
+    bgimage: {
+        position: "relative",
+        resizeMode:'contain',
+        "width": windowWidth,
+        "height": windowHeight
+      },
+    logoutbtn: {
+        "position": "absolute",
+        "width": 55/414 * windowWidth,
+        "height": 56/896 * windowHeight,
+        "left": 19/414 * windowWidth,
+        "top": 38/896 * windowHeight
+      },  
     container: {
         "position": "relative",
         "width": windowWidth,
