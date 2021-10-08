@@ -5,8 +5,8 @@ import { Dimensions } from 'react-native';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function Order({ navigation }) {
-    const [state, setState] = useState({ orderNo: 0 })
+export default function Order({ navigation,route }) {
+    const [state, setState] = React.useState(route.params ? route.params : null);
     //assign orderNo the value coming from cart page
     function ordrPlaced() {
         alert('Order Placed');
@@ -18,7 +18,7 @@ export default function Order({ navigation }) {
             <Image source={require('../assets/info.png')} style={styles.infoStyle} />    
             <Text style={styles.OrderNumber}>Order Number:</Text>
             <View style={styles.NumbDisplay}>
-                <Text style={styles.CodeStyle} >{state.orderNo}</Text>
+                <Text style={styles.CodeStyle} >{state}</Text>
             </View>
             
             <TouchableOpacity style={styles.Button2Style}
