@@ -4,7 +4,8 @@ import { Dimensions } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 import fire from './firebase';
-import 'firebase/database'
+import 'firebase/database';
+import 'firebase/auth'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -22,7 +23,7 @@ export default function QRScreen({ navigation }) {
             setHasPermission(status === 'granted');
         })()
     }
-
+    
     useEffect(() => {
         askForCameraPermission();
     }, []);
@@ -38,7 +39,17 @@ export default function QRScreen({ navigation }) {
         console.log('Line 38 '+ JSON.stringify(qrCode))
     };
 
-
+    //signout 
+    const signOutUser = async () => {
+        try{
+            await fire.auth().signOut()
+            navigation.navigate('Login')
+            
+        }catch(e){
+            console.log('logout')
+            console.log(e)
+        }
+    }
 
     //assign values to display
    
@@ -90,7 +101,7 @@ export default function QRScreen({ navigation }) {
             <TouchableOpacity style={styles.ToCart} onPress={() => { toCart() }}>
                 <Image source={require('../assets/ToCart.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.logoutbtn}>
+            <TouchableOpacity style={styles.logoutbtn} onPress={() => signOutUser()} >
                 <Image source={require('../assets/logoutbtn.png')} style={{resizeMode: 'contain', width: '100%', height: '100%'}} />
             </TouchableOpacity>
             <View>
