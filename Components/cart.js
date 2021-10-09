@@ -17,58 +17,71 @@ const windowHeight = Dimensions.get('window').height;
 const itemsList = [];
 
 export default function Cart({ navigation ,route }) {
-
   const [QRarray, setQRarray] = React.useState(route.params ? route.params : []);
+  // const [QRarray, setQRarray] = React.useState([{Code:"RM5",Quant:1}]);
   const [itemsArray, setItemsArray] = React.useState([]);
   const [flag, setFlag] = React.useState(0);
-  const [test,setTest] = React.useState();
-  const [orderNo,setOrderNo] = React.useState();
+  const [test,setTest] = React.useState(0);
+  const [key,setKey] = React.useState();
+  const [orderNo,setOrderNo] = React.useState(null);
   console.log(JSON.stringify(QRarray))
-  if(flag===0){
+  React.useEffect(() => {
+  if(flag===0)
+  {
   for (let i = 0; i < QRarray.length; i++) {
+    console.log(QRarray[i].Code)
     fire.database().ref('Items').orderByChild("ItemId").equalTo(QRarray[i].Code).on('value', snapshot => {
-
       let data = snapshot.val();
       const items = Object.values(data);
       itemsArray.push(items[0]);
+      console.log(itemsArray);  
     });
   }
   setFlag(1);
 }
+}, []);
   const [totalCost,setTotalCost] = useState(0)
   const totalItems = itemsArray.length;
-
+  console.log(itemsArray); 
 let sum =0,i=0
   for(let item of itemsArray){
     sum += item.Price * QRarray[i].Quant 
     i++
   }
 
-function totalOrders(){
-  fire.database().ref('TotalOrders').transaction((current_value) => {
+  function totalOrders () {
+    fire.database().ref('TotalOrders').transaction((current_value) => {
     setOrderNo((current_value || 0) + 1);
-    return (current_value || 0) + 1;
+    console.log(orderNo);
+          console.log("Line 64 "+orderNo);
+          fire.database().ref('Orders').push().then((snap) => {
+          setKey(snap.key);
+          console.log("Line 67 "+key);
+          fire.database().ref('Orders/'+key).set({
+          OrderNo: orderNo,
+          QRArray: QRarray,
+          Key:key,
+          Status:'B'
+        }); 
+      });
+   return (current_value || 0) + 1;
 });
-}
+  }
 
   if(!itemsArray){return(<Text>The page is loading</Text>)}
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF'}}>
       <View style={{flex:0.5}}>
-      <TouchableOpacity style={styles.qrScanStyle} onPress={() => {navigation.navigate("QR Screen")}}>
+      <TouchableOpacity style={styles.qrScanStyle} onPress={() => {navigation.navigate("Order Screen",orderNo);}}>
         <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
       </TouchableOpacity>
       
-      <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => 
+      <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={ () => 
         {
-          totalOrders();
-          console.log(orderNo)
-          fire.database().ref('Orders').push().set({
-            OrderNo: orderNo,
-            QRArray: QRarray,
-            Status:'B'
-          });
-          navigation.navigate("Order Screen",orderNo)}}>
+        totalOrders();
+
+      }
+      }>
         <Text style={{color: "white"}}>Proceed to Buy ({totalItems} items)</Text>
       </TouchableOpacity>
       
