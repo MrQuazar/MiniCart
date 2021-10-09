@@ -14,6 +14,7 @@ import logo from '../../assets/TheIcon.png'
 export default function Login({ navigation }) {
   const [UName, setUName] = React.useState();
   const [PWord, setPWord] = React.useState();
+  
   return (
     <View style={{ flex: 1, backgroundcolor: '#e5e5e5', justifyContent: 'center' }}>
       <LinearGradient
@@ -28,21 +29,24 @@ export default function Login({ navigation }) {
       <Text style={styles.RegText}>Login</Text>
       <Text style={styles.CreateNewAccTxt}>Enter your Username and Password</Text>
       <TextInput style={styles.InputStyle1} placeholder='Enter Username'
-      onChangeText={UName => setUName(UName)}></TextInput>
+      onChangeText={UName => setUName(UName)}
+      ></TextInput>
       <TextInput style={styles.InputStyle2} placeholder='Enter Password'
       onChangeText={PWord => setPWord(PWord)} secureTextEntry={true}></TextInput>
       <TouchableOpacity style={styles.Button} title='Login' onPress={
         async () => {
           try {
+            
             await fire.auth().signInWithEmailAndPassword(UName+"@gmail.com", PWord);
             console.log(UName);
             console.log(PWord);
             navigation.navigate("QR Screen")
+            
+            
           } catch (error) {
             alert('Something Went Wrong');
           }
-        }
-      }>
+        }} >
         <Text style={styles.ButtonText}>Login</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.HaveAccTxt}>
