@@ -4,7 +4,7 @@
     "slug": "Mini_Cart",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/picture.png",
+    "icon": "./assets/miniIcon.png",
     "splash": {
       "image": "./assets/SplashScreen.png",
       "resizeMode": "cover"

@@ -17,11 +17,18 @@ const windowHeight = Dimensions.get('window').height;
 const itemsList = [];
 
 export default function Cart({ navigation ,route }) {
+  const [state, setState] = useState({
+    search: '',
+  })
+
+  const [textInputValue, setTextInputValue] = React.useState('');
+  const [value, onChangeText] = React.useState('Useless Placeholder');
 
   const [QRarray, setQRarray] = React.useState(route.params ? route.params : []);
   const [itemsArray, setItemsArray] = React.useState([]);
   const [flag, setFlag] = React.useState(0);
   const [test,setTest] = React.useState();
+  const [orderNo,setOrderNo] = React.useState();
   console.log(JSON.stringify(QRarray))
   if(flag===0){
   for (let i = 0; i < QRarray.length; i++) {
@@ -43,6 +50,13 @@ let sum =0,i=0
     i++
   }
 
+function totalOrders(){
+  fire.database().ref('TotalOrders').transaction((current_value) => {
+    setOrderNo((current_value || 0) + 1);
+    return (current_value || 0) + 1;
+});
+}
+
   if(!itemsArray){return(<Text>The page is loading</Text>)}
   return (
     <ImageBackground source={require('../assets/cartbackground.png')} style={styles.bgimage} >
@@ -52,17 +66,31 @@ let sum =0,i=0
         <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
       </TouchableOpacity>
       
-      <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => navigation.navigate("Order Screen")}>
+      <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => 
+        {
+          totalOrders();
+          console.log(orderNo)
+          fire.database().ref('Orders').push().set({
+            OrderNo: orderNo,
+            QRArray: QRarray,
+            Status:'B'
+          });
+          navigation.navigate("Order Screen",orderNo)}}>
         <Text style={{color: "white"}}>Proceed to Buy ({totalItems} items)</Text>
       </TouchableOpacity>
       
       <Text style={styles.totalText}>Total:</Text>
       <Text style={styles.cartTotal}>₹ {sum}</Text>
-      <TextInput style={styles.InputStyle1} placeholder='Search here'></TextInput>  
+      <TextInput 
+      style={styles.InputStyle1} 
+      placeholder='Search here'
+      onChangeText={(text) => setTextInputValue(text)}
+      value={textInputValue}></TextInput>  
       </View>
 
       <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 414/414 * windowWidth, "height": 600/896 * windowHeight, "left": -10/414 * windowWidth, "top":120/896 * windowHeight}}>
         {itemsArray.map((item, index) => {
+          if(item.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
           return (
             <View key={index} style={{flex: 1, "width": 414/414 * windowWidth, Height: 1000/896 * windowHeight,"top": -90/896 * windowHeight, marginVertical:60}}>
 
@@ -116,6 +144,7 @@ let sum =0,i=0
               <Text style={styles.itemQuantity}>{QRarray[index].Quant}</Text>
             </View>
           );
+                }
         })}
       </ScrollView>
     </View>
