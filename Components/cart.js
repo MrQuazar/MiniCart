@@ -59,8 +59,10 @@ function totalOrders(){
 
   if(!itemsArray){return(<Text>The page is loading</Text>)}
   return (
+    
     <ImageBackground source={require('../assets/cartbackground.png')} style={styles.bgimage} >
     <View style={{ flex: 1}}>
+    
       <View style={{flex:0.5}}>
       <TouchableOpacity style={styles.qrScanStyle} onPress={() => {navigation.navigate("QR Screen")}}>
         <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
@@ -88,7 +90,7 @@ function totalOrders(){
       value={textInputValue}></TextInput>  
       </View>
 
-      <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 414/414 * windowWidth, "height": 600/896 * windowHeight, "left": -10/414 * windowWidth, "top":120/896 * windowHeight}}>
+      <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 414/414 * windowWidth, "height": 600/896 * windowHeight, "left": -10/414 * windowWidth, "top":45/896 * windowHeight}}>
         {itemsArray.map((item, index) => {
           if(item.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
           return (
@@ -158,7 +160,7 @@ const styles = StyleSheet.create({
     position: "relative",
     resizeMode:'contain',
     "width": windowWidth,
-    "height": windowHeight
+    "height": 1.2 * windowHeight
   },
   container: {
     flex: 1,
@@ -217,7 +219,7 @@ const styles = StyleSheet.create({
     "position": "absolute",
     "width": 0.08454 * windowWidth,
     "height": 0.04241 * windowHeight,
-    "right": 26/414 * windowWidth,
+    "right": 122/414 * windowWidth,
     "top": 84/896 * windowHeight,
   },
 
@@ -225,7 +227,7 @@ const styles = StyleSheet.create({
     "position": "absolute",
     "width": 0.08454 * windowWidth,
     "height": 0.04241 * windowHeight,
-    "right": 122/414 * windowWidth,
+    "right": 26/414 * windowWidth,
     "top": 84/896 * windowHeight,
   },
 

@@ -118,14 +118,14 @@ const styles = StyleSheet.create({
         position: "relative",
         resizeMode:'contain',
         "width": windowWidth,
-        "height": windowHeight
+        "height": 1.2 * windowHeight
       },
     logoutbtn: {
         "position": "absolute",
-        "width": 55/414 * windowWidth,
-        "height": 56/896 * windowHeight,
-        "left": 19/414 * windowWidth,
-        "top": 38/896 * windowHeight
+        "width": 0.09 * windowWidth,
+        "height":  0.05 * windowHeight,
+        "left": 20/414 * windowWidth,
+        "top": 50/896 * windowHeight
       },  
     container: {
         "position": "relative",
