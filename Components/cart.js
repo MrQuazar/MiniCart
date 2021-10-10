@@ -22,8 +22,8 @@ export default function Cart({ navigation ,route }) {
   const [itemsArray, setItemsArray] = React.useState([]);
   const [flag, setFlag] = React.useState(0);
   const [test,setTest] = React.useState(0);
-  const [key,setKey] = React.useState();
-  const [orderNo,setOrderNo] = React.useState(null);
+  const [key,setKey] = React.useState('nada');
+  const [orderNo,setOrderNo] = React.useState(0);
   console.log(JSON.stringify(QRarray))
   React.useEffect(() => {
   if(flag===0)
@@ -51,20 +51,8 @@ let sum =0,i=0
 
   function totalOrders () {
     fire.database().ref('TotalOrders').transaction((current_value) => {
-    setOrderNo((current_value || 0) + 1);
-    console.log(orderNo);
-          console.log("Line 64 "+orderNo);
-          fire.database().ref('Orders').push().then((snap) => {
-          setKey(snap.key);
-          console.log("Line 67 "+key);
-          fire.database().ref('Orders/'+key).set({
-          OrderNo: orderNo,
-          QRArray: QRarray,
-          Key:key,
-          Status:'B'
-        }); 
-      });
-   return (current_value || 0) + 1;
+    setOrderNo((current_value || 0) + 1);     
+    return (current_value || 0) + 1;
 });
   }
 
@@ -72,17 +60,32 @@ let sum =0,i=0
   return (
     <View style={{ flex: 1, backgroundColor: '#FFFFFF'}}>
       <View style={{flex:0.5}}>
-      <TouchableOpacity style={styles.qrScanStyle} onPress={() => {navigation.navigate("Order Screen",orderNo);}}>
+      <TouchableOpacity style={styles.qrScanStyle} onPress={() => {navigation.navigate("QR Screen")}}>
         <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
       </TouchableOpacity>
       
-      <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={ () => 
+      <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => 
         {
+        console.log("Line 64 "+orderNo);
+          fire.database().ref('Orders').push().then((snap) => {
+          setKey(snap.key);
+        });
+        if (orderNo==0){
         totalOrders();
-
+        };
+        if(!(orderNo==0 && key=="nada")){
+          console.log("Line 67 "+key);
+          fire.database().ref('Orders/'+key).set({
+          OrderNo: orderNo,
+          QRArray: QRarray,
+          Key:key,
+          Status:'B'  
+      });
+      navigation.navigate("Order Screen",orderNo); 
+    }
       }
       }>
-        <Text style={{color: "white"}}>Proceed to Buy ({totalItems} items)</Text>
+        <Text style={{color: "white"}}>Double tap to Place Order({totalItems} items)</Text>
       </TouchableOpacity>
       
       <Text style={styles.totalText}>Total:</Text>
