@@ -1,12 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Text, View, StyleSheet, ImageBackground, Image, TouchableOpacity } from 'react-native';
 import { Dimensions } from 'react-native';
+
+import fire from './firebase';
+import 'firebase/database'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 export default function Order({ navigation,route }) {
-    const [state, setState] = React.useState(route.params ? route.params : null);
+    const {orderNo} = route.params
+    const {QRarray} = route.params
+    const [orderNum, setOrderNum] = React.useState(orderNo ? orderNo : null);
+    const [QRArray, setQRArray] = React.useState(QRarray ? QRarray : [])
+    console.log("16 thi "+JSON.stringify(QRarray))
+    console.log("17 thi "+orderNo)
+
+   
+
+        if(orderNo){
+        console.log("OR Line 14 " + orderNo + "QRarray : " + QRarray)
+        fire.database().ref('Orders').push({
+            OrderNo: orderNo,
+            QRArray: QRarray,
+            Status:'B'
+          });}
+
+    
     //assign orderNo the value coming from cart page
     function ordrPlaced() {
         alert('Order Placed');
@@ -18,7 +38,7 @@ export default function Order({ navigation,route }) {
             <Image source={require('../assets/info.png')} style={styles.infoStyle} />    
             <Text style={styles.OrderNumber}>Order Number:</Text>
             <View style={styles.NumbDisplay}>
-                <Text style={styles.CodeStyle} >{state}</Text>
+                <Text style={styles.CodeStyle} >{orderNum}</Text>
             </View>
             
             <TouchableOpacity style={styles.Button2Style}

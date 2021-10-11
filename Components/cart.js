@@ -28,7 +28,7 @@ export default function Cart({ navigation ,route }) {
   const [itemsArray, setItemsArray] = React.useState([]);
   const [flag, setFlag] = React.useState(0);
   const [test,setTest] = React.useState();
-  const [orderNo,setOrderNo] = React.useState();
+  const [orderNo,setOrderNo] = React.useState(null);
   console.log(JSON.stringify(QRarray))
   if(flag===0){
   for (let i = 0; i < QRarray.length; i++) {
@@ -51,10 +51,46 @@ let sum =0,i=0
   }
 
 function totalOrders(){
-  fire.database().ref('TotalOrders').transaction((current_value) => {
-    setOrderNo((current_value || 0) + 1);
-    return (current_value || 0) + 1;
-});
+  if(orderNo===null) {return(
+        
+    <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => 
+            {
+              
+              fire.database().ref('TotalOrders').transaction((current_value) => {
+                setOrderNo((current_value || 0) + 1);
+                return (current_value || 0) + 1;
+            });
+              
+              }}>
+            <Text style={{color: "white"}}>Genrate Order No. </Text>
+          </TouchableOpacity>)}
+          else{
+          return(
+            <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => 
+            {
+              Alert.alert(
+                "Alert",
+                "Do You Want to Proceed?",
+                [
+                  {
+                    text: "NO",
+                    onPress: () => console.log("Cancel Pressed"),
+                    
+                  },
+                  { text: "YES", 
+                  onPress: () => {   
+                    console.log("Line 92 "+orderNo)                 
+                    navigation.navigate("Order Screen",{orderNo: orderNo,QRarray: QRarray}) 
+                  }
+                }
+                ],
+                
+              )
+              }}>
+            <Text style={{color: "white"}}>Proceed to Buy ({totalItems} items)</Text>
+          </TouchableOpacity>
+              )}
+          
 }
 
   if(!itemsArray){return(<Text>The page is loading</Text>)}
@@ -67,19 +103,9 @@ function totalOrders(){
       <TouchableOpacity style={styles.qrScanStyle} onPress={() => {navigation.navigate("QR Screen")}}>
         <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
       </TouchableOpacity>
+      { totalOrders()
+        }
       
-      <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => 
-        {
-          totalOrders();
-          console.log(orderNo)
-          fire.database().ref('Orders').push().set({
-            OrderNo: orderNo,
-            QRArray: QRarray,
-            Status:'B'
-          });
-          navigation.navigate("Order Screen",orderNo)}}>
-        <Text style={{color: "white"}}>Proceed to Buy ({totalItems} items)</Text>
-      </TouchableOpacity>
       
       <Text style={styles.totalText}>Total:</Text>
       <Text style={styles.cartTotal}>₹ {sum}</Text>
