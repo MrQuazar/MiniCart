@@ -40,6 +40,41 @@ export default function RegisterMobile({ navigation }) {
   };
   const attemptInvisibleVerification = false;
 
+  function OTPButton(){
+      return(
+        <View style={{position: "absolute",
+        width: 224 / 414 * windowWidth,
+        height: 37 / 896 * windowHeight}}>
+          <TouchableOpacity style={styles.Button} title='Get OTP'
+        onPress={async () => {
+          // The FirebaseRecaptchaVerifierModal ref implements the
+          // FirebaseAuthApplicationVerifier interface and can be
+          // passed directly to `verifyPhoneNumber`.
+          console.log(phoneNumber);
+          const confirmation = await  fire.auth().signInWithPhoneNumber(
+            phoneNumber,
+            recaptchaVerifier.current
+          );
+          setConfirm(confirmation);
+          showMessage({
+            text: 'Verification code has been sent to your phone.',
+          });
+        }}>
+        <Text style={styles.ButtonText}>Get OTP</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.Button2} title='Get OTP'
+        onPress={() => {
+          navigation.navigate("EnterOTP",confirm)
+        }}>
+        <Text style={styles.ButtonText}>Enter OTP</Text>
+        </TouchableOpacity>
+        </View>
+      
+              )
+    
+  }
+
   
   return (
     <View style={styles.container}>
@@ -74,24 +109,8 @@ export default function RegisterMobile({ navigation }) {
         <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "500", fontSize: 10, lineHeight: 12, color: "#FFC700" }}>
           Sign In</Text>
       </TouchableOpacity>
+      {OTPButton()}
 
-      <TouchableOpacity style={styles.Button} title='Get OTP'
-        onPress={async () => {
-          // The FirebaseRecaptchaVerifierModal ref implements the
-          // FirebaseAuthApplicationVerifier interface and can be
-          // passed directly to `verifyPhoneNumber`.
-          console.log(phoneNumber);
-          const confirmation = await  fire.auth().signInWithPhoneNumber(
-            "+91 "+phoneNumber,
-            recaptchaVerifier.current
-          );
-          setConfirm(confirmation);
-          showMessage({
-            text: 'Verification code has been sent to your phone.',
-          });
-          navigation.navigate("EnterOTP",confirm)
-        }}>
-        <Text style={styles.ButtonText}>Get OTP</Text></TouchableOpacity>
       {message ? (
         <TouchableOpacity
           style={[
@@ -160,7 +179,7 @@ const styles = StyleSheet.create({
   {
     position: "absolute",
     width: 304 / 414 * windowWidth,
-    height: 233 / 896 * windowHeight,
+    height: 270 / 896 * windowHeight,
     left: 55 / 414 * windowWidth,
     top: 292 / 896 * windowHeight,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
@@ -234,6 +253,22 @@ const styles = StyleSheet.create({
     height: 37 / 896 * windowHeight,
     left: 95 / 414 * windowWidth,
     top: 456 / 896 * windowHeight,
+    backgroundColor: "#FFC700",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+
+  Button2:
+  {
+    position: "absolute",
+    width: 224 / 414 * windowWidth,
+    height: 37 / 896 * windowHeight,
+    left: 95 / 414 * windowWidth,
+    top: 505 / 896 * windowHeight,
     backgroundColor: "#FFC700",
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
