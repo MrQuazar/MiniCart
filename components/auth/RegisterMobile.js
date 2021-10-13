@@ -99,7 +99,7 @@ export default function RegisterMobile({ navigation }) {
       <Text style={styles.CreateNewAccTxt}>Create a New Account</Text>
       <TextInput style={styles.InputStyle} placeholder='Mobile Number' keyboardType='phone-pad'
         textContentType="telephoneNumber"
-        onChangeText={phoneNumber => setPhoneNumber(phoneNumber)}></TextInput>
+        onChangeText={phoneNumber => setPhoneNumber("+91 "+phoneNumber)}></TextInput>
       <TouchableOpacity style={styles.HaveAccTxt}>
         <Text style={{ fontFamily: "Roboto", fontStyle: "normal", fontWeight: "500", fontSize: 10, lineHeight: 12, color: "rgba(231, 231, 231, 0.81)" }}>
           Have an account already?</Text>

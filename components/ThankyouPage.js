@@ -9,7 +9,7 @@ const windowHeight = Dimensions.get('screen').height
 
 export default function ThankyouPage({ navigation }) {
     return (
-        <TouchableWithoutFeedback onPress={() => navigation.navigate("QR Screen")}>
+        <TouchableWithoutFeedback onPress={() => navigation.navigate("Login")}>
             <View style={styles.container} >
                 <LinearGradient
                     start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }}
