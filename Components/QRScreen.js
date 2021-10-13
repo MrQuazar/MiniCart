@@ -10,12 +10,12 @@ import 'firebase/auth'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function QRScreen({ navigation }) {
+export default function QRScreen({ navigation ,route}) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
     const [qrCode, setqrCode] = useState({Code:"RM4",Quant:1});
     const [itemsArray, setItemsArray] = React.useState([{ItemId:"RM",Name: "Please scan an item",Price:"Not Applicable"}]);
-    const [savedItems, setSavedItems] = React.useState([]);
+    const [savedItems, setSavedItems] = React.useState(route.params ? route.params : []);
 
     const askForCameraPermission = () => {
         (async () => {
@@ -43,7 +43,7 @@ export default function QRScreen({ navigation }) {
     const signOutUser = async () => {
         try{
             await fire.auth().signOut()
-            navigation.navigate('Login')
+            navigation.navigate('Login');
             
         }catch(e){
             console.log('logout')

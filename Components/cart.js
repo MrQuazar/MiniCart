@@ -20,10 +20,8 @@ export default function Cart({ navigation ,route }) {
   const [state, setState] = useState({
     search: '',
   })
-
   const [textInputValue, setTextInputValue] = React.useState('');
   const [value, onChangeText] = React.useState('Useless Placeholder');
-
   const [QRarray, setQRarray] = React.useState(route.params ? route.params : []);
   const [itemsArray, setItemsArray] = React.useState([]);
   const [flag, setFlag] = React.useState(0);
