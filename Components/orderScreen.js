@@ -15,18 +15,26 @@ export default function Order({ navigation,route }) {
     const [QRArray, setQRArray] = React.useState(QRarray ? QRarray : [])
     console.log("16 thi "+JSON.stringify(QRarray))
     console.log("17 thi "+orderNo)
+    const [status, setStatus] = React.useState()
+    
 
-   
-
-        if(orderNo){
+        
         console.log("OR Line 14 " + orderNo + "QRarray : " + QRarray)
         fire.database().ref('Orders').push({
             OrderNo: orderNo,
             QRArray: QRarray,
             Status:'B'
-          });}
-
-    
+          });
+          fire.database().ref('TestOrders').orderByChild('OrderNo').equalTo(orderNo).on('value',snap => {
+            snap.forEach((child => {setStatus(child.Status)
+                console.log(status)
+                console.log(child.Status)
+            }))
+        })
+        
+          
+        
+    console.log(status)
     //assign orderNo the value coming from cart page
     function ordrPlaced() {
         alert('Order Placed');
@@ -38,6 +46,8 @@ export default function Order({ navigation,route }) {
             <Image source={require('../assets/info.png')} style={styles.infoStyle} />    
             <Text style={styles.OrderNumber}>Order Number:</Text>
             <View style={styles.NumbDisplay}>
+                
+                <Text>{status}</Text>
                 <Text style={styles.CodeStyle} >{orderNum}</Text>
             </View>
             
@@ -87,9 +97,7 @@ const styles = StyleSheet.create({
         height: 0.266 * windowHeight,
         left: 0.178 * windowWidth,
         top: 0.4 * windowHeight,
-        backgroundColor: "#06F401",
         borderWidth: 1,
-        borderColor: "#000000",
         borderStyle: "solid",
         borderRadius: 25,
         alignItems: "center"
