@@ -14,9 +14,11 @@ import react from 'react';
 
 export default function Login({ navigation ,route}) {
   const [UName, setUName] = React.useState();
-  const [PWord, setPWord] =  React.useState(route.params ? route.params : null);
+  const [PWord, setPWord] = React.useState();
+  const [key, setKey] = React.useState(0);
   const unamekeeper = React.createRef();
   const passwordkeeper = React.createRef();
+
   return (
     <View style={{ flex: 1, backgroundcolor: '#e5e5e5', justifyContent: 'center' }}>
       <LinearGradient
@@ -39,10 +41,14 @@ export default function Login({ navigation ,route}) {
       <TouchableOpacity style={styles.Button} title='Login' onPress={
         async () => {
           try {
+            console.log(UName+" "+PWord);
             await fire.auth().signInWithEmailAndPassword(UName+"@gmail.com", PWord);
+            console.log("yes")
             unamekeeper.current.clear();
             passwordkeeper.current.clear();
-            navigation.navigate("QR Screen")  
+            setPWord(" ");
+            setUName(" ");
+            navigation.navigate("QR Screen") 
           } catch (error) {
             alert('Something Went Wrong');
           }

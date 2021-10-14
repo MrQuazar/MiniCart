@@ -13,6 +13,7 @@ const windowHeight = Dimensions.get('window').height;
 export default function QRScreen({ navigation ,route}) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
+    const [test, setTest] = useState(30);
     const [qrCode, setqrCode] = useState({Code:"RM4",Quant:1});
     const [itemsArray, setItemsArray] = React.useState([{ItemId:"RM",Name: "Please scan an item",Price:"Not Applicable"}]);
     const [savedItems, setSavedItems] = React.useState(route.params ? route.params : []);
@@ -26,6 +27,7 @@ export default function QRScreen({ navigation ,route}) {
     
     useEffect(() => {
         askForCameraPermission();
+        console.log("Hi");
     }, []);
 
     //TODO: Improve Scanning
