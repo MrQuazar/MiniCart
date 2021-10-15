@@ -11,28 +11,59 @@ const windowHeight = Dimensions.get('window').height;
 export default function Order({ navigation,route }) {
     const {orderNo} = route.params
     const {QRarray} = route.params
-    const [orderNum, setOrderNum] = React.useState(orderNo ? orderNo : null);
-    const [QRArray, setQRArray] = React.useState(QRarray ? QRarray : [])
     console.log("16 thi "+JSON.stringify(QRarray))
     console.log("17 thi "+orderNo)
     const [status, setStatus] = React.useState()
+    const [flag, setFlag] = React.useState(0)
+    useEffect(() => {
+        
+if(orderNo && flag===1){
+    fire.database().ref('Orders').orderByChild('OrderNo').equalTo(orderNo).on('value',snap => {
+      let data = snap.val();
+      const items = Object.values(data);
+      setStatus(items[0].Status);
+      })
+      setFlag(2)
+}
+    }, []);
     
 
-        
+        if(flag===0 && orderNo){
         console.log("OR Line 14 " + orderNo + "QRarray : " + QRarray)
         fire.database().ref('Orders').push({
             OrderNo: orderNo,
             QRArray: QRarray,
             Status:'B'
-          });
-          fire.database().ref('TestOrders').orderByChild('OrderNo').equalTo(orderNo).on('value',snap => {
-            snap.forEach((child => {setStatus(child.Status)
-                console.log(status)
-                console.log(child.Status)
-            }))
-        })
+          })
+        setFlag(1)
+        }
+
         
-          
+    function orderStatus(){
+        switch(status) {
+            case 'R':
+                return(
+                <View style={styles.RedNumbDisplay}>
+                <Text style={styles.CodeStyle} >{orderNo}</Text>
+            </View>)
+            case 'B':
+                return(
+                <View style={styles.BlueNumbDisplay}>
+                <Text style={styles.CodeStyle} >{orderNo}</Text>
+            </View>)
+            case 'G':
+                return(
+                <View style={styles.GreenNumbDisplay}>
+                <Text style={styles.CodeStyle} >{orderNo}</Text>
+            </View>)
+            default:
+                return(
+            <View style={styles.NumbDisplay}>
+                <Text style={styles.CodeStyle} >Loading</Text>
+            </View>)
+          }
+        
+    }      
         
     console.log(status)
     //assign orderNo the value coming from cart page
@@ -45,11 +76,7 @@ export default function Order({ navigation,route }) {
         <View style={styles.container}>
             <Image source={require('../assets/info.png')} style={styles.infoStyle} />    
             <Text style={styles.OrderNumber}>Order Number:</Text>
-            <View style={styles.NumbDisplay}>
-                
-                <Text>{status}</Text>
-                <Text style={styles.CodeStyle} >{orderNum}</Text>
-            </View>
+        {orderStatus()}
             
             <TouchableOpacity style={styles.Button2Style}
                 onPress={() => { navigation.navigate("ThankyouPage") }} >
@@ -91,6 +118,33 @@ const styles = StyleSheet.create({
         "lineHeight": 25
         
     },
+    BlueNumbDisplay: {
+        position: "absolute",
+        width: 0.644 * windowWidth,
+        height: 0.266 * windowHeight,
+        left: 0.178 * windowWidth,
+        top: 0.4 * windowHeight,
+        backgroundColor:'#0137F4',
+        borderWidth: 1,
+        borderStyle: "solid",
+        borderRadius: 25,
+        alignItems: "center",
+        justifyContent:"center"
+    },
+    
+    RedNumbDisplay: {
+        position: "absolute",
+        width: 0.644 * windowWidth,
+        height: 0.266 * windowHeight,
+        left: 0.178 * windowWidth,
+        top: 0.4 * windowHeight,
+        backgroundColor:'#F42D01',
+        borderWidth: 1,
+        borderStyle: "solid",
+        borderRadius: 25,
+        alignItems: "center",
+        justifyContent:"center"
+    },
     NumbDisplay: {
         position: "absolute",
         width: 0.644 * windowWidth,
@@ -100,7 +154,21 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderStyle: "solid",
         borderRadius: 25,
-        alignItems: "center"
+        alignItems: "center",
+        justifyContent:"center"
+    },
+    GreenNumbDisplay: {
+        position: "absolute",
+        width: 0.644 * windowWidth,
+        height: 0.266 * windowHeight,
+        left: 0.178 * windowWidth,
+        top: 0.4 * windowHeight,
+        backgroundColor:'#06F401',
+        borderWidth: 1,
+        borderStyle: "solid",
+        borderRadius: 25,
+        alignItems: "center",
+        justifyContent:"center"
     },
     Button2Style: {
         position: "absolute",
