@@ -25,7 +25,7 @@ export default function Cart({ navigation ,route }) {
   const [QRarray, setQRarray] = React.useState(route.params ? route.params : []);
   const [itemsArray, setItemsArray] = React.useState([]);
   const [flag, setFlag] = React.useState(0);
-  const [test,setTest] = React.useState();
+  const [test,setTest] = React.useState(0);
   const [orderNo,setOrderNo] = React.useState(null);
   console.log(JSON.stringify(QRarray))
   if(flag===0){
@@ -126,7 +126,7 @@ function totalOrders(){
               
               <TouchableOpacity style={styles.plusStyle} onPress={() => {
                 QRarray[index].Quant = QRarray[index].Quant + 1
-                setTest(QRarray[index].Quant)
+                setTest(test+ 0.1)
                /* console.log(item.Quantity)*/}}>
                 <Image source={plusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
@@ -160,7 +160,7 @@ function totalOrders(){
 
                 else{
                   QRarray[index].Quant = QRarray[index].Quant - 1
-                setTest(QRarray[index].Quant)
+                setTest(test - 0.1)
                 /*console.log(item.Quantity)*/}}}>
                 <Image source={minusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
