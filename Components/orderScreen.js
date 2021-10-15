@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { Text, View, StyleSheet, ImageBackground, Image, TouchableOpacity } from 'react-native';
+import { Text, View, StyleSheet, ImageBackground, Image, TouchableOpacity,Alert } from 'react-native';
 import { Dimensions } from 'react-native';
 
 import fire from './firebase';
@@ -55,11 +55,12 @@ if(orderNo && flag===1){
                 return(
                 <View style={styles.GreenNumbDisplay}>
                 <Text style={styles.CodeStyle} >{orderNo}</Text>
+                {Alert.alert("Your order is ready!")}
             </View>)
             default:
                 return(
             <View style={styles.NumbDisplay}>
-                <Text style={styles.CodeStyle} >Loading</Text>
+                <Text style={styles.CodeStyle} >Load..</Text>
             </View>)
           }
         
@@ -79,7 +80,15 @@ if(orderNo && flag===1){
         {orderStatus()}
             
             <TouchableOpacity style={styles.Button2Style}
-                onPress={() => { navigation.navigate("ThankyouPage") }} >
+                onPress={() => { 
+                    fire.database().ref('Orders').orderByChild('OrderNo').equalTo(orderNo).on('value',snap=>{
+                        snap.forEach(child=>{
+                         fire.database().ref('Orders/'+child.key).update({
+                             Status:'C'
+                         })
+                        })
+                    })
+                    navigation.navigate("ThankyouPage") }} >
                 <Image source={require('./../assets/ReceivedBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
         </View>
