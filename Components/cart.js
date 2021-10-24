@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity,ScrollView, Alert } from 'react-native';
+import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity,ScrollView, Alert,ImageBackground } from 'react-native';
 
 import qrScan from './../assets/qrScan.png'
 import minusbtn from './../assets/minusbtn.png'
@@ -17,11 +17,16 @@ const windowHeight = Dimensions.get('window').height;
 const itemsList = [];
 
 export default function Cart({ navigation ,route }) {
-
+  const [state, setState] = useState({
+    search: '',
+  })
+  const [textInputValue, setTextInputValue] = React.useState('');
+  const [value, onChangeText] = React.useState('Useless Placeholder');
   const [QRarray, setQRarray] = React.useState(route.params ? route.params : []);
   const [itemsArray, setItemsArray] = React.useState([]);
   const [flag, setFlag] = React.useState(0);
-  const [test,setTest] = React.useState();
+  const [test,setTest] = React.useState(0);
+  const [orderNo,setOrderNo] = React.useState(null);
   console.log(JSON.stringify(QRarray))
   if(flag===0){
   for (let i = 0; i < QRarray.length; i++) {
@@ -34,8 +39,16 @@ export default function Cart({ navigation ,route }) {
   }
   setFlag(1);
 }
-  const [totalCost,setTotalCost] = useState(0)
-  const totalItems = itemsArray.length;
+// Total Items 
+
+  let totalItems = 0, j = 0
+    for(let item of itemsArray){
+      console.log(totalItems)
+      totalItems +=  QRarray[j].Quant
+      j++
+      console.log(totalItems) 
+    }
+
 
 let sum =0,i=0
   for(let item of itemsArray){
@@ -43,24 +56,69 @@ let sum =0,i=0
     i++
   }
 
+function totalOrders(){
+  if(orderNo===null) {return(
+        
+    <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => 
+            {
+              
+              fire.database().ref('TotalOrders').transaction((current_value) => {
+                setOrderNo((current_value || 0) + 1);
+                return (current_value || 0) + 1;
+            });
+              
+              }}>
+            <Text style={{color: "white"}}>Genrate Order No. </Text>
+          </TouchableOpacity>)}
+          else{
+          return(
+            <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => 
+            {
+              Alert.alert(
+                "Alert",
+                "Do You Want to Proceed?",
+                [
+                  {
+                    text: "NO",
+                    onPress: () => console.log("Cancel Pressed"),
+                    
+                  },
+                  { text: "YES", 
+                  onPress: () => {   
+                    console.log("Line 92 "+orderNo)                 
+                    navigation.navigate("Order Screen",{orderNo: orderNo,QRarray: QRarray}) 
+                  }
+                }
+                ],
+                
+              )
+              }}>
+            <Text style={{color: "white"}}>Proceed to Buy ({totalItems} items)</Text>
+          </TouchableOpacity>
+              )}
+          
+}
+
   if(!itemsArray){return(<Text>The page is loading</Text>)}
   return (
-    <View style={{ flex: 1, backgroundColor: '#FFFFFF'}}>
+    
+    <ImageBackground source={require('../assets/cartbackground.png')} style={styles.bgimage} >
+    <View style={{ flex: 1}}>
+    
       <View style={{flex:0.5}}>
       <TouchableOpacity style={styles.qrScanStyle} onPress={() => {navigation.navigate("QR Screen")}}>
         <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
       </TouchableOpacity>
+      { totalOrders()
+        }
       
-      <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => navigation.navigate("Order Screen")}>
-        <Text style={{color: "white"}}>Proceed to Buy ({totalItems} items)</Text>
-      </TouchableOpacity>
       
       <Text style={styles.totalText}>Total:</Text>
       <Text style={styles.cartTotal}>₹ {sum}</Text>
       <TextInput style={styles.InputStyle1} placeholder='Search here'></TextInput>  
       </View>
 
-      <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 414/414 * windowWidth, "height": 600/896 * windowHeight, "left": -10/414 * windowWidth, "top":120/896 * windowHeight}}>
+      <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 414/414 * windowWidth, "height": 600/896 * windowHeight, "left": -10/414 * windowWidth, "top":45/896 * windowHeight}}>
         {itemsArray.map((item, index) => {
           return (
             <View key={index} style={{flex: 1, "width": 414/414 * windowWidth, Height: 1000/896 * windowHeight,"top": -90/896 * windowHeight, marginVertical:60}}>
@@ -71,7 +129,7 @@ let sum =0,i=0
               
               <TouchableOpacity style={styles.plusStyle} onPress={() => {
                 QRarray[index].Quant = QRarray[index].Quant + 1
-                setTest(QRarray[index].Quant)
+                setTest(test+ 0.1)
                /* console.log(item.Quantity)*/}}>
                 <Image source={plusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
@@ -105,7 +163,7 @@ let sum =0,i=0
 
                 else{
                   QRarray[index].Quant = QRarray[index].Quant - 1
-                setTest(QRarray[index].Quant)
+                setTest(test - 0.1)
                 /*console.log(item.Quantity)*/}}}>
                 <Image source={minusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
               </TouchableOpacity>
@@ -118,12 +176,19 @@ let sum =0,i=0
         })}
       </ScrollView>
     </View>
+    </ImageBackground>
     
   )
 }
 
 
 const styles = StyleSheet.create({
+  bgimage: {
+    position: "relative",
+    resizeMode:'contain',
+    "width": windowWidth,
+    "height": 1.2 * windowHeight
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
@@ -181,7 +246,7 @@ const styles = StyleSheet.create({
     "position": "absolute",
     "width": 0.08454 * windowWidth,
     "height": 0.04241 * windowHeight,
-    "right": 26/414 * windowWidth,
+    "right": 122/414 * windowWidth,
     "top": 84/896 * windowHeight,
   },
 
@@ -189,7 +254,7 @@ const styles = StyleSheet.create({
     "position": "absolute",
     "width": 0.08454 * windowWidth,
     "height": 0.04241 * windowHeight,
-    "right": 122/414 * windowWidth,
+    "right": 26/414 * windowWidth,
     "top": 84/896 * windowHeight,
   },
 

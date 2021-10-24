@@ -9,9 +9,10 @@ import 'firebase/database'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-export default function QRScreen({ navigation }) {
+export default function QRScreen({ navigation}) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
+    const [test, setTest] = useState(30);
     const [qrCode, setqrCode] = useState({Code:"RM4",Quant:1});
     const [itemsArray, setItemsArray] = React.useState([{ItemId:"RM",Name: "Please scan an item",Price:"Not Applicable"}]);
     const [savedItems, setSavedItems] = React.useState([]);
@@ -25,6 +26,7 @@ export default function QRScreen({ navigation }) {
 
     useEffect(() => {
         askForCameraPermission();
+        console.log("Hi");
     }, []);
 
     //TODO: Improve Scanning
@@ -38,13 +40,18 @@ export default function QRScreen({ navigation }) {
         console.log('Line 38 '+ JSON.stringify(qrCode))
     };
 
-
-
-    //assign values to display
-    function shouldScan() {
-        alert('Camera on');
-        //scan and display values;
+    //signout 
+    const signOutUser = async () => {
+        try{
+            await fire.auth().signOut()
+            navigation.navigate('Login');
+            
+        }catch(e){
+            console.log('logout')
+            console.log(e)
+        }
     }
+
     function toCart() {
         navigation.navigate("cart", savedItems);
         //scan and display values;
@@ -83,6 +90,7 @@ export default function QRScreen({ navigation }) {
             </View>)
     }
     return (
+        <ImageBackground source={require('../assets/cartbackground.png')} style={styles.bgimage} >
         <View style={styles.container}>
             <View >
                 <BarCodeScanner
@@ -92,8 +100,8 @@ export default function QRScreen({ navigation }) {
             <TouchableOpacity style={styles.ToCart} onPress={() => { toCart() }}>
                 <Image source={require('../assets/ToCart.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.ScanBtn} onPress={() => { shouldScan() }}>
-                <Image source={require('../assets/ScanBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+            <TouchableOpacity style={styles.logoutbtn} onPress={() => signOutUser()} >
+                <Image source={require('../assets/logoutbtn.png')} style={{resizeMode: 'contain', width: '100%', height: '100%'}} />
             </TouchableOpacity>
             <View>
                 {itemsArray.map((item, index) => {
@@ -112,9 +120,23 @@ export default function QRScreen({ navigation }) {
                 <Image source={require('../assets/CancelBtn.png')} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
             </TouchableOpacity>
         </View>
+        </ImageBackground>
     );
 }
 const styles = StyleSheet.create({
+    bgimage: {
+        position: "relative",
+        resizeMode:'contain',
+        "width": windowWidth,
+        "height": 1.2 * windowHeight
+      },
+    logoutbtn: {
+        "position": "absolute",
+        "width": 0.09 * windowWidth,
+        "height":  0.05 * windowHeight,
+        "left": 20/414 * windowWidth,
+        "top": 50/896 * windowHeight
+      },  
     container: {
         "position": "relative",
         "width": windowWidth,

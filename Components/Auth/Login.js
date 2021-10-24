@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Dimensions } from 'react-native';
@@ -10,10 +10,15 @@ const windowHeight = Dimensions.get('screen').height;
 
 
 import logo from '../../assets/TheIcon.png'
+import react from 'react';
 
-export default function Login({ navigation }) {
+export default function Login({ navigation ,route}) {
   const [UName, setUName] = React.useState();
   const [PWord, setPWord] = React.useState();
+  const [key, setKey] = React.useState(0);
+  const unamekeeper = React.createRef();
+  const passwordkeeper = React.createRef();
+
   return (
     <View style={{ flex: 1, backgroundcolor: '#e5e5e5', justifyContent: 'center' }}>
       <LinearGradient
@@ -28,16 +33,22 @@ export default function Login({ navigation }) {
       <Text style={styles.RegText}>Login</Text>
       <Text style={styles.CreateNewAccTxt}>Enter your Username and Password</Text>
       <TextInput style={styles.InputStyle1} placeholder='Enter Username'
-      onChangeText={UName => setUName(UName)}></TextInput>
+      onChangeText={UName => setUName(UName)} ref={unamekeeper}
+      ></TextInput>
       <TextInput style={styles.InputStyle2} placeholder='Enter Password'
-      onChangeText={PWord => setPWord(PWord)} secureTextEntry={true}></TextInput>
+      onChangeText={PWord => setPWord(PWord)} secureTextEntry={true} ref={passwordkeeper}
+      ></TextInput>
       <TouchableOpacity style={styles.Button} title='Login' onPress={
         async () => {
           try {
+            console.log(UName+" "+PWord);
             await fire.auth().signInWithEmailAndPassword(UName+"@gmail.com", PWord);
-            console.log(UName);
-            console.log(PWord);
-            navigation.navigate("QR Screen")
+            console.log("yes")
+            unamekeeper.current.clear();
+            passwordkeeper.current.clear();
+            setPWord(" ");
+            setUName(" ");
+            navigation.navigate("QR Screen") 
           } catch (error) {
             alert('Something Went Wrong');
           }
