@@ -39,8 +39,16 @@ export default function Cart({ navigation ,route }) {
   }
   setFlag(1);
 }
-  const [totalCost,setTotalCost] = useState(0)
-  const totalItems = itemsArray.length;
+// Total Items 
+
+  let totalItems = 0, j = 0
+    for(let item of itemsArray){
+      console.log(totalItems)
+      totalItems +=  QRarray[j].Quant
+      j++
+      console.log(totalItems) 
+    }
+
 
 let sum =0,i=0
   for(let item of itemsArray){
