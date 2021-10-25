@@ -126,8 +126,6 @@ const styles = StyleSheet.create({
     },    
     OrderNumber: {
         "position": "absolute",
-        "width": 164/414 * windowWidth,
-        "height": 25/896 * windowHeight,
         "left": 74/414 * windowWidth,
         "top": 300/896 * windowHeight,
         "fontStyle": "normal",
