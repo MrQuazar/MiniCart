@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity,ScrollView, Alert, ImageBackground } from 'react-native';
+import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity,ScrollView, Alert,ImageBackground } from 'react-native';
 
 import qrScan from './../assets/qrScan.png'
 import minusbtn from './../assets/minusbtn.png'
@@ -39,8 +39,16 @@ export default function Cart({ navigation ,route }) {
   }
   setFlag(1);
 }
-  const [totalCost,setTotalCost] = useState(0)
-  const totalItems = itemsArray.length;
+// Total Items 
+
+  let totalItems = 0, j = 0
+    for(let item of itemsArray){
+      console.log(totalItems)
+      totalItems +=  QRarray[j].Quant
+      j++
+      console.log(totalItems) 
+    }
+
 
 let sum =0,i=0
   for(let item of itemsArray){
@@ -107,16 +115,11 @@ function totalOrders(){
       
       <Text style={styles.totalText}>Total:</Text>
       <Text style={styles.cartTotal}>₹ {sum}</Text>
-      <TextInput 
-      style={styles.InputStyle1} 
-      placeholder='Search here'
-      onChangeText={(text) => setTextInputValue(text)}
-      value={textInputValue}></TextInput>  
+      <TextInput style={styles.InputStyle1} placeholder='Search here'></TextInput>  
       </View>
 
       <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 414/414 * windowWidth, "height": 600/896 * windowHeight, "left": -10/414 * windowWidth, "top":45/896 * windowHeight}}>
         {itemsArray.map((item, index) => {
-          if(item.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
           return (
             <View key={index} style={{flex: 1, "width": 414/414 * windowWidth, Height: 1000/896 * windowHeight,"top": -90/896 * windowHeight, marginVertical:60}}>
 
@@ -170,11 +173,11 @@ function totalOrders(){
               <Text style={styles.itemQuantity}>{QRarray[index].Quant}</Text>
             </View>
           );
-                }
         })}
       </ScrollView>
     </View>
     </ImageBackground>
+    
   )
 }
 
