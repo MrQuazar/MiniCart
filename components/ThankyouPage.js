@@ -10,7 +10,7 @@ const windowHeight = Dimensions.get('screen').height
 export default function ThankyouPage({ navigation }) {
     const [resetter, setResetter] = React.useState([]);
     return (
-        <TouchableWithoutFeedback onPress={() => navigation.navigate("QR Screen",resetter)}>
+        <TouchableWithoutFeedback onPress={() => navigation.reset({routes:[{name:"QR Screen"}]})}>
             <View style={styles.container} >
                 <LinearGradient
                     start={{ x: 1, y: 0 }} end={{ x: 0, y: 1 }}
