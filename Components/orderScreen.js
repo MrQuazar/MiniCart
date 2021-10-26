@@ -75,6 +75,17 @@ if(orderNo && flag===1){
     return (
         <ImageBackground source={require('../assets/orderbackground.png')} style={styles.bgimage} >
         <View style={styles.container}>
+            
+      <View style={styles.infoDisplay}>
+      <Image source={require('./../assets/blue.png')} style={{left: (12 / 414) * windowWidth, top: (6/ 896) * windowHeight,width: (17 / 414) * windowWidth, height: (17 / 896) * windowHeight,}} />
+      <Image source={require('./../assets/red.png')} style={{left: (12 / 414) * windowWidth, top: (20/ 896) * windowHeight,width: (17 / 414) * windowWidth, height: (17 / 896) * windowHeight,}} />
+      <Image source={require('./../assets/green.png')} style={{left: (12 / 414) * windowWidth, top: (34/ 896) * windowHeight,width: (17 / 414) * windowWidth, height: (17 / 896) * windowHeight,}} />
+
+      <Text style={styles.text1}>Payment Pending</Text>
+      <Text style={styles.text2}>Paid and Items not received</Text>
+      <Text style={styles.text3}>Items ready</Text>
+      </View>
+
             <Text style={styles.OrderNumber}>Order Number:</Text>
         {orderStatus()}
             
@@ -115,17 +126,80 @@ const styles = StyleSheet.create({
     },    
     OrderNumber: {
         "position": "absolute",
-        "width": 164/414 * windowWidth,
-        "height": 25/896 * windowHeight,
         "left": 74/414 * windowWidth,
         "top": 300/896 * windowHeight,
         "fontStyle": "normal",
         "fontWeight": "normal",
         "fontSize": 20,
          color:'white',
-        "lineHeight": 25
+        "lineHeight": 45
         
     },
+    
+  infoDisplay: {
+    position: "absolute",
+    width: 369/414 * windowWidth,
+    height: 100/896 * windowHeight,
+    left: 22/414 * windowWidth,
+    top: 92/896 * windowHeight,
+    backgroundColor: "#FFFFFF",
+    borderWidth: 0.5,
+    borderColor: "#000000",
+    borderStyle: "solid",
+    borderRadius: 5,
+},
+    
+  blueStyle: {
+    position: "absolute",
+    right: (27 / 414) * windowWidth,
+    top: (6 / 896) * windowHeight,
+    lineHeight: 22,
+    fontWeight: "bold",
+  },
+
+  redStyle: {
+    position: "absolute",
+    right: (27 / 414) * windowWidth,
+    top: (35 / 896) * windowHeight,
+    lineHeight: 22,
+    fontWeight: "bold",
+  },
+
+  greenStyle: {
+    position: "absolute",
+    right: (27 / 414) * windowWidth,
+    top: (64 / 896) * windowHeight,
+    lineHeight: 22,
+    fontWeight: "bold",
+  },
+    
+  text1: {
+    position: "absolute",
+    left: (70 / 414) * windowWidth,
+    top: (6 / 896) * windowHeight,
+    fontWeight: "bold",
+    lineHeight: 22,
+    fontSize: 18
+  },
+
+  text2: {
+    position: "absolute",
+    left: (70 / 414) * windowWidth,
+    top: (35 / 896) * windowHeight,
+    fontWeight: "bold",
+    lineHeight: 22,
+    fontSize: 18
+  },
+
+  text3: {
+    position: "absolute",
+    left: (70 / 414) * windowWidth,
+    top: (64 / 896) * windowHeight,
+    fontWeight: "bold",
+    lineHeight: 22,
+    fontSize: 18,
+    display: "flex"
+  },
     BlueNumbDisplay: {
         position: "absolute",
         width: 0.644 * windowWidth,

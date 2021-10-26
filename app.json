@@ -22,7 +22,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/picture.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.rcoe.MiniCart",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/picture.png"

@@ -44,7 +44,7 @@ export default function QRScreen({ navigation}) {
     const signOutUser = async () => {
         try{
             await fire.auth().signOut()
-            navigation.navigate('Login');
+            navigation.reset({routes:[{name:"Login"}]});
             
         }catch(e){
             console.log('logout')

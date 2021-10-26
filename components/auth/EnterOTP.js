@@ -2,6 +2,10 @@ import React from 'react'
 import { Text, View, StyleSheet, Image, TextInput, TouchableOpacity } from 'react-native'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Dimensions } from 'react-native';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+]);
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('screen').height;

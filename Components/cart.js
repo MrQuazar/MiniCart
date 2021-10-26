@@ -61,14 +61,19 @@ function totalOrders(){
         
     <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => 
             {
-              
+              if(QRarray.length==0){
+
+                Alert.alert("The cart is empty! Please add some items before generating order number.")
+              }
+              else{
+                
               fire.database().ref('TotalOrders').transaction((current_value) => {
                 setOrderNo((current_value || 0) + 1);
                 return (current_value || 0) + 1;
             });
               
-              }}>
-            <Text style={{color: "white"}}>Genrate Order No. </Text>
+             }}}>
+            <Text style={{color: "white"}}>Generate Order No. </Text>
           </TouchableOpacity>)}
           else{
           return(
@@ -151,7 +156,7 @@ function totalOrders(){
                           QRarray.splice(index,1)
                           console.log(index)
                           console.log(itemsArray)
-                          setTest(index) 
+                          setTest(test - 0.1) 
                       }
                     }
                     ],
