@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Mini_Cart",
-    "slug": "Mini_Cart",
+    "name": "MiniCart",
+    "slug": "MiniCart",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/miniIcon.png",
@@ -20,13 +20,15 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/picture.png",
+        "foregroundImage": "./assets/miniIcon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.mrquazar.Mini_Cart"
+      "package": "com.rcoe.MiniCart",
+      "versionCode": 1
     },
     "web": {
-      "favicon": "./assets/picture.png"
-    }
+      "favicon": "./assets/miniIcon.png"
+    },
+    "description": ""
   }
 }

@@ -13,7 +13,6 @@ import 'firebase/database'
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-
 const itemsList = [];
 
 export default function Cart({ navigation ,route }) {
@@ -28,17 +27,19 @@ export default function Cart({ navigation ,route }) {
   const [test,setTest] = React.useState(0);
   const [orderNo,setOrderNo] = React.useState(null);
   console.log(JSON.stringify(QRarray))
-  if(flag===0){
-  for (let i = 0; i < QRarray.length; i++) {
-    fire.database().ref('Items').orderByChild("ItemId").equalTo(QRarray[i].Code).on('value', snapshot => {
 
+  React.useEffect(() => {
+    let isMounted = true;
+    if(flag===0){
+      for (let i = 0; i < QRarray.length; i++) {
+        fire.database().ref('Items').orderByChild("ItemId").equalTo(QRarray[i].Code).on('value', snapshot => {    
       let data = snapshot.val();
       const items = Object.values(data);
       itemsArray.push(items[0]);
     });
   }
   setFlag(1);
-}
+}})
 // Total Items 
 
   let totalItems = 0, j = 0
@@ -61,14 +62,19 @@ function totalOrders(){
         
     <TouchableOpacity style={styles.buyBtnStyle} title='BuyButton' onPress={() => 
             {
-              
+              if(QRarray.length==0){
+
+                Alert.alert("The cart is empty! Please add some items before generating order number.")
+              }
+              else{
+                
               fire.database().ref('TotalOrders').transaction((current_value) => {
                 setOrderNo((current_value || 0) + 1);
                 return (current_value || 0) + 1;
             });
               
-              }}>
-            <Text style={{color: "white"}}>Genrate Order No. </Text>
+             }}}>
+            <Text style={{color: "white"}}>Generate Order No. </Text>
           </TouchableOpacity>)}
           else{
           return(
@@ -99,88 +105,96 @@ function totalOrders(){
           
 }
 
-  if(!itemsArray){return(<Text>The page is loading</Text>)}
-  return (
+if(!itemsArray){return(<Text>The page is loading</Text>)}
+return (
+  
+  <ImageBackground source={require('../assets/cartbackground.png')} style={styles.bgimage} >
+  <View style={{ flex: 1}}>
+  
+    <View style={{flex:0.5}}>
+    <TouchableOpacity style={styles.qrScanStyle} onPress={() => {navigation.navigate("QR Screen")}}>
+      <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+    </TouchableOpacity>
+    { totalOrders()
+      }
     
-    <ImageBackground source={require('../assets/cartbackground.png')} style={styles.bgimage} >
-    <View style={{ flex: 1}}>
     
-      <View style={{flex:0.5}}>
-      <TouchableOpacity style={styles.qrScanStyle} onPress={() => {navigation.navigate("QR Screen")}}>
-        <Image source={qrScan} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-      </TouchableOpacity>
-      { totalOrders()
-        }
-      
-      
-      <Text style={styles.totalText}>Total:</Text>
-      <Text style={styles.cartTotal}>₹ {sum}</Text>
-      <TextInput style={styles.InputStyle1} placeholder='Search here'></TextInput>  
-      </View>
-
-      <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 414/414 * windowWidth, "height": 600/896 * windowHeight, "left": -10/414 * windowWidth, "top":45/896 * windowHeight}}>
-        {itemsArray.map((item, index) => {
-          return (
-            <View key={index} style={{flex: 1, "width": 414/414 * windowWidth, Height: 1000/896 * windowHeight,"top": -90/896 * windowHeight, marginVertical:60}}>
-
-              <TouchableOpacity style={styles.prod1Style} >
-                <Image source={{uri: item.Image}} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-              </TouchableOpacity>
-              
-              <TouchableOpacity style={styles.plusStyle} onPress={() => {
-                QRarray[index].Quant = QRarray[index].Quant + 1
-                setTest(test+ 0.1)
-               /* console.log(item.Quantity)*/}}>
-                <Image source={plusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-              </TouchableOpacity>
-              
-              <TouchableOpacity style={styles.minusStyle} onPress={() => {
-                if(QRarray[index].Quant === 1){
-                  Alert.alert(
-                    "Alert",
-                    "Do You Want to Remove This Item",
-                    [
-                      {
-                        text: "NO",
-                        onPress: () => console.log("Cancel Pressed"),
-                        
-                      },
-                      { text: "YES", 
-                      onPress: () => {                    
-                          itemsArray.splice(index, 1)
-                          QRarray.splice(index,1)
-                          console.log(index)
-                          console.log(itemsArray)
-                          setTest(index) 
-                      }
-                    }
-                    ],
-                    
-                  );
-
-
-                }
-
-                else{
-                  QRarray[index].Quant = QRarray[index].Quant - 1
-                setTest(test - 0.1)
-                /*console.log(item.Quantity)*/}}}>
-                <Image source={minusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
-              </TouchableOpacity>
-               
-              <Text style={styles.itemName}>{item.Name}</Text>
-              <Text style={styles.itemPrice}>₹{item.Price * QRarray[index].Quant}</Text>
-              <Text style={styles.itemQuantity}>{QRarray[index].Quant}</Text>
-            </View>
-          );
-        })}
-      </ScrollView>
+    <Text style={styles.totalText}>Total:</Text>
+    <Text style={styles.cartTotal}>₹ {sum}</Text>
+    <TextInput 
+    style={styles.InputStyle1} 
+    placeholder='Search here'
+    onChangeText={(text) => setTextInputValue(text)}
+    value={textInputValue}
+    >
+    </TextInput>  
     </View>
-    </ImageBackground>
-    
-  )
-}
 
+    <ScrollView contentContainerStyle= {{justifyContent:'space-around'}} style={{flexGrow: 0.1, "width": 414/414 * windowWidth, "height": 600/896 * windowHeight, "left": -10/414 * windowWidth, "top":45/896 * windowHeight}}>
+      {itemsArray.map((item, index) => {
+        if(item.Name.toLowerCase().includes(textInputValue.toLowerCase()) || textInputValue == ""){
+        return (
+          <View key={index} style={{flex: 1, "width": 414/414 * windowWidth, Height: 1000/896 * windowHeight,"top": -90/896 * windowHeight, marginVertical:60}}>
+
+            <TouchableOpacity style={styles.prod1Style} >
+              <Image source={{uri: item.Image}} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.plusStyle} onPress={() => {
+              QRarray[index].Quant = QRarray[index].Quant + 1
+              setTest(test+ 0.1)
+              /* console.log(item.Quantity)*/}}>
+              <Image source={plusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+            </TouchableOpacity>
+            
+            <TouchableOpacity style={styles.minusStyle} onPress={() => {
+              if(QRarray[index].Quant === 1){
+                Alert.alert(
+                  "Alert",
+                  "Do You Want to Remove This Item",
+                  [
+                    {
+                      text: "NO",
+                      onPress: () => console.log("Cancel Pressed"),
+                      
+                    },
+                    { text: "YES", 
+                    onPress: () => {                    
+                        itemsArray.splice(index, 1)
+                        QRarray.splice(index,1)
+                        console.log(index)
+                        console.log(itemsArray)
+                        setTest(test - 0.1) 
+                    }
+                  }
+                  ],
+                  
+                );
+
+
+              }
+
+              else{
+                QRarray[index].Quant = QRarray[index].Quant - 1
+              setTest(test - 0.1)
+              /*console.log(item.Quantity)*/}}}>
+              <Image source={minusbtn} style={{ resizeMode: 'contain', width: '100%', height: '100%' }} />
+            </TouchableOpacity>
+              
+            <Text style={styles.itemName}>{item.Name}</Text>
+            <Text style={styles.itemPrice}>₹{item.Price * QRarray[index].Quant}</Text>
+            <Text style={styles.itemQuantity}>{QRarray[index].Quant}</Text>
+          </View>
+        );
+}
+else{
+  console.log("nothing")
+} })}
+    </ScrollView>
+  </View>
+  </ImageBackground>
+  
+)}
 
 const styles = StyleSheet.create({
   bgimage: {
@@ -357,4 +371,4 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 5
   },
-});
+})

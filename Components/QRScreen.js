@@ -4,8 +4,7 @@ import { Dimensions } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 import fire from './firebase';
-import 'firebase/database';
-import 'firebase/auth'
+import 'firebase/database'
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -14,7 +13,7 @@ export default function QRScreen({ navigation}) {
     const [hasPermission, setHasPermission] = useState(null);
     const [scanned, setScanned] = useState(false);
     const [test, setTest] = useState(30);
-    const [qrCode, setqrCode] = useState({Code:"RM4",Quant:1});
+    const [qrCode, setqrCode] = useState({Code:"RM",Quant:1});
     const [itemsArray, setItemsArray] = React.useState([{ItemId:"RM",Name: "Please scan an item",Price:"Not Applicable"}]);
     const [savedItems, setSavedItems] = React.useState([]);
 
@@ -24,7 +23,7 @@ export default function QRScreen({ navigation}) {
             setHasPermission(status === 'granted');
         })()
     }
-    
+
     useEffect(() => {
         askForCameraPermission();
         console.log("Hi");
@@ -45,7 +44,7 @@ export default function QRScreen({ navigation}) {
     const signOutUser = async () => {
         try{
             await fire.auth().signOut()
-            navigation.navigate('Login');
+            navigation.reset({routes:[{name:"Login"}]});
             
         }catch(e){
             console.log('logout')
@@ -53,8 +52,6 @@ export default function QRScreen({ navigation}) {
         }
     }
 
-    //assign values to display
-   
     function toCart() {
         navigation.navigate("cart", savedItems);
         //scan and display values;

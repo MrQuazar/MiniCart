@@ -52,7 +52,8 @@ export default function Login({ navigation ,route}) {
           } catch (error) {
             alert('Something Went Wrong');
           }
-        }} >
+        }
+      }>
         <Text style={styles.ButtonText}>Login</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.HaveAccTxt}>

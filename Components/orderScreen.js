@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
         "fontWeight": "normal",
         "fontSize": 20,
          color:'white',
-        "lineHeight": 25
+        "lineHeight": 45
         
     },
     
